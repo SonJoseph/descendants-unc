@@ -1,8 +1,8 @@
 <h2> Build </h2>
-Before push to master,
-npm run build in /client
-*app.py serves the "built" ReactJS
+<p>Before push to master, <br>
+<code>npm run build</code> in /client <br>
+*app.py serves the "built" ReactJS</p>
 
 <h2> Test </h2>
-client: npm start in /client
-server: python app.py
+<p>client: <code>npm start</code> in /client <br>
+server: python app.py</p>
