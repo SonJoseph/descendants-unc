@@ -40,7 +40,6 @@ def getNodes():
         for record in result: # result is type BoltStatementResult
             names['names'].append(record["name"])
     return names
-    
 
 if __name__ == '__main__':
     app.run(use_reloader=True, port=5000)
