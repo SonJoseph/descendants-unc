@@ -7,12 +7,15 @@
 <p>client: <code>npm start</code> in /client <br>
 server: python app.py</p>
 
+In package.json, we set the proxy of HTTP requests from React client to localhost:5000. This is the url of our local Python Flask dev server.
+
 <h2> Python dependencies </h2>
 <code>
-conda env list
-conda activate [vm name]
-pip install [dependancy name]
+conda env list <br>
+conda activate [vm name] <br>
+pip install [dependancy name] <br>
 pip freeze > requirements.txt
 </code>
 
-neo4j-driver is deprecated. <code> pip install </code> instead
+neo4j-driver is deprecated. <br>
+<code> pip install </code> instead <br>

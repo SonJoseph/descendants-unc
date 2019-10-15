@@ -1,6 +1,7 @@
 import os
 from flask import Flask, send_from_directory
 from neo4j import GraphDatabase, basic_auth
+from flask import jsonify
 
 app = Flask(__name__, static_folder='client/build')
 
@@ -27,6 +28,10 @@ def connect(): # connect to neo4j instance
     for record in result:
         print(record["name"])
     session.close()
+
+@app.route('/api/createnode')
+def createNode():
+    return jsonify("hello")
 
 if __name__ == '__main__':
     app.run(use_reloader=True, port=5000)
