@@ -21,13 +21,15 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/api/createnode')
-def createNode():
-    # result = {''}
+@app.route('/api/createnode/<name>')
+def createNode(name):
+    inserted = ''
     driver = connect()
     with driver.session() as session:
-        session.run("CREATE (n:Person { name: 'Andy', title: 'Developer' })")
-
+        result = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
+        for record in result:
+            inserted = record["name"]
+    return jsonify(inserted)
 
 @app.route('/api/getnodes')
 def getNodes():

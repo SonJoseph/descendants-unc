@@ -1,6 +1,16 @@
 import React from 'react'
 
 class SelectTree extends React.Component {
+    /*
+        Load the client with a list of the avaialble family trees.
+    */
+
+    getNodes = async () => { 
+        const response = await fetch('/api/getnodes') 
+        const myJson = await response.json()
+        console.log(myJson.names) // This is an array of node names
+    }
+
     render() {
         return (
             <div>

@@ -1,34 +1,43 @@
 import React from 'react'
-
-// const request = require('request')
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Container from '@material-ui/core/Container'
 
 class UpdateTree extends React.Component {    
+    /*
+        A form to create a node
+    */
+
     constructor(props){
         super(props)
         this.state = {
-            message : ''
+            name : ''
         }
     }
 
-    createNode = async () => { // async allows this function to be called asynchronously 
-        const response = await fetch('/api/createnode') // await allows us to wait for the response of an asynchronous request.
-        // const myJson = await response.json()
-        // console.log(myJson)
+    createNode = async () => {
+        const response = await fetch('/api/createnode/' + this.state.name) 
+        const myJson = await response.json()
+        console.log(myJson)
         // this.setState({message : myJson})
     }
 
-    getNodes = async () => { 
-        const response = await fetch('/api/getnodes') 
-        const myJson = await response.json()
-        console.log(myJson.names) // This is an array of node names
+    handleChange = (e) => {
+        this.setState({
+            name : e.target.value
+        })
     }
 
     render() {
         return (
-            <div>
-                <button onClick={this.getNodes}>Get Nodes</button>
-                {this.state.message}
-            </div>
+            <Container>
+                <TextField
+                    label="Name"
+                    value={this.state.name}
+                    onChange={this.handleChange}
+                />
+                <Button onClick={this.createNode}>Create Node</Button>
+            </Container>
         )
     }
 }

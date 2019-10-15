@@ -11,11 +11,14 @@ In package.json, we set the proxy of HTTP requests from React client to localhos
 
 <h2> Python dependencies </h2>
 <code>
-conda env list <br>
-conda activate [vm name] <br>
-pip install [dependancy name] <br>
-pip freeze > requirements.txt
+conda env list  
+conda activate [vm name]  
+pip install [dependancy name]  
+pip freeze > requirements.txt  
 </code>
 
 neo4j-driver is deprecated. <br>
 <code> pip install </code> instead <br>
+
+<h2> Neo4j </h2>
+Clear database: <code> MATCH (n) DETACH DELETE n </code>
