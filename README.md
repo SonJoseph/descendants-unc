@@ -1,1 +1,1 @@
-hi joseph!
+pip install --user --requirement requirements.txt
