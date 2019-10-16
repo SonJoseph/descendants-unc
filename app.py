@@ -60,19 +60,17 @@ def getTrees():
 
 '''
 
-members = []
 visited = set() # set
 
 @app.route('/api/gettree/<tree>')
 def getTree(tree):
-    global members
+    members = []
     driver = connect()
     with driver.session() as session:
-        addMember(session, tree, 1)
+        members.append(addMember(session, tree, 1))
     return jsonify(members)
 
 def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
-    global members
     global visited
 
     if(tree in visited):
@@ -95,14 +93,15 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
     children = session.run("MATCH (Person { name: '"+ tree +"' })-[:parent]->(person) RETURN person.name as name") # array of the obj{name : ''}
 
     for child in children:
-        member['marriages'][0]['children'].append(child['name'])
-        addMember(session, child['name'], depth+1)
+        member['marriages'][0]['children'].append(
+            addMember(session, child['name'], depth+1)
+        )
     spouses = session.run("MATCH (Person { name: '"+ tree +"' })-[:spouse]-(person) RETURN person.name as name") # array of obj{name : ''}
 
     for spouse in spouses:
-        member['marriages'][0]['spouse'] = spouse['name']
-        addMember(session, spouse['name'], depth)
-    members.append(member)
+        member['marriages'][0]['spouse'] = addMember(session, spouse['name'], depth)
+
+    return member
 
 if __name__ == '__main__':
     app.run(use_reloader=True, port=5000)
