@@ -21,15 +21,10 @@ class UpdateTree extends React.Component {
     }
 
     getTree = async () => {
-        console.log(this.state.family)
         const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
         this.setState({tree : myJson})
         console.log(myJson)
-    }
-
-    componentDidMount() {
-        this.getTree()
     }
 
     handleChange = (e) => {
@@ -38,6 +33,9 @@ class UpdateTree extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.getTree()
+    }
 
    drawNode = () => {
      d3.select(this.refs.tree)
