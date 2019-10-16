@@ -5,7 +5,7 @@ import Container from '@material-ui/core/Container'
 import * as d3 from "d3"
 import _ from 'lodash';
 import dTree from 'd3-dtree';
-
+import './UpdateTree.css';
 window.d3 = d3;
 
 class UpdateTree extends React.Component {
@@ -52,19 +52,31 @@ class UpdateTree extends React.Component {
 
    drawTree = () => {
      var treeData = this.state.tree
-
-      	dTree.init(treeData,
-					{
+      	dTree.init(treeData,{
 						target: this.refs.tree,
 						debug: true,
 						height: 800,
-						width: 1200
+						width: 1200,
+            margin: {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  },
+  nodeWidth: 100,
+  styles: {
+    node: 'node',
+    linage: 'linage',
+    marriage: 'marriage',
+    text: 'nodeText'
+  }
 					});
    }
 
 
     render() {
         return (
+            <Container>
             <Container>
                 {this.state.family}
                 <TextField
@@ -74,9 +86,10 @@ class UpdateTree extends React.Component {
                 />
                 <Button onClick={this.getTree}>Get Tree data</Button>
                 <Button onClick={this.drawTree}>Draw Node</Button>
-
-                <svg ref="tree" id = "graph" width={800} height={800}></svg>
-
+            </Container>
+            <Container>
+                <svg ref="tree" id = "graph" width={800} height={500}></svg>
+            </Container>
 
 
             </Container>
