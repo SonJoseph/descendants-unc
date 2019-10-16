@@ -10,22 +10,26 @@ window.d3 = d3;
 
 class UpdateTree extends React.Component {
     /*
-        A form to create a node
+        A form to update an existing tree
     */
     constructor(props){
         super(props)
         this.state = {
             family : props.location.state.family,
-            name : ''
+            tree : []
         }
     }
 
-    createNode = async () => {
+    getTree = async () => {
+        console.log(this.state.family)
         const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
+        this.setState({tree : myJson})
         console.log(myJson)
-        //drawNode()
-        // this.setState({message : myJson})
+    }
+
+    componentDidMount() {
+        this.getTree()
     }
 
     handleChange = (e) => {
@@ -130,7 +134,7 @@ class UpdateTree extends React.Component {
                     value={this.state.name}
                     onChange={this.handleChange}
                 />
-                <Button onClick={this.createNode}>Create Node</Button>
+                <Button onClick={this.getTree}>Get Tree data</Button>
                 <Button onClick={this.drawTree}>Draw Node</Button>
 
                 <svg ref="tree" id = "graph" width={800} height={500}></svg>
