@@ -53,56 +53,7 @@ class UpdateTree extends React.Component {
 
 
    drawTree = () => {
-     var treeData = [{
-  "name": "Niclas Superlongsurname",
-  "class": "man",
-  "textClass": "emphasis",
-  "marriages": [{
-    "spouse": {
-      "name": "Iliana",
-      "class": "woman",
-      "extra": {
-        "nickname": "Illi"
-      }
-    },
-    "children": [{
-      "name": "James",
-      "class": "man",
-      "marriages": [{
-        "spouse": {
-          "name": "Alexandra",
-          "class": "woman"
-        },
-        "children": [{
-          "name": "Eric",
-          "class": "man",
-          "marriages": [{
-            "spouse": {
-              "name": "Eva",
-              "class": "woman"
-            }
-          }]
-        }, {
-          "name": "Jane",
-          "class": "woman"
-        }, {
-          "name": "Jasper",
-          "class": "man"
-        }, {
-          "name": "Emma",
-          "class": "woman"
-        }, {
-          "name": "Julia",
-          "class": "woman"
-        }, {
-          "name": "Jessica",
-          "class": "woman"
-        }]
-      }]
-    }]
-  }]
-}]
-
+     var treeData = this.state.tree
       	dTree.init(treeData,{
 						target: this.refs.tree,
 						debug: true,
@@ -128,6 +79,7 @@ class UpdateTree extends React.Component {
     render() {
         return (
             <Container>
+            <Container>
                 {this.state.family}
                 <TextField
                     label="Name"
@@ -136,9 +88,10 @@ class UpdateTree extends React.Component {
                 />
                 <Button onClick={this.getTree}>Get Tree data</Button>
                 <Button onClick={this.drawTree}>Draw Node</Button>
-
+            </Container>
+            <Container>
                 <svg ref="tree" id = "graph" width={800} height={500}></svg>
-
+            </Container>
 
 
             </Container>

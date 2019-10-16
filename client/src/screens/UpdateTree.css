@@ -9,7 +9,7 @@ body {
 	    fill: none;
 	    stroke: black;
 	}
-	.man {
+	.node {
 	    background-color: lightblue;
 			border-style: solid;
 			border-width: 1px;
