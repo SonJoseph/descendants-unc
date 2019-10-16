@@ -4,8 +4,12 @@
 *app.py serves the "built" ReactJS</p>
 
 <h2> Test </h2>
-<p>client: <code>npm start</code> in /client <br>
-server: python app.py</p>
+<p>client: <br>
+<code> npm install </code> <br>
+<code> npm start</code> in /client <br>
+server: <br>
+<code> pip install -r requirements.txt </code><br>
+<code>python app.py</code> </p>
 
 In package.json, we set the proxy of HTTP requests from React client to localhost:5000. This is the url of our local Python Flask dev server.
 

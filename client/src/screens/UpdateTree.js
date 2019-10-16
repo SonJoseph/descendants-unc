@@ -12,16 +12,16 @@ class UpdateTree extends React.Component {
     /*
         A form to create a node
     */
-
     constructor(props){
         super(props)
         this.state = {
+            family : props.location.state.family,
             name : ''
         }
     }
 
     createNode = async () => {
-        const response = await fetch('/api/createnode/' + this.state.name)
+        const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
         console.log(myJson)
         //drawNode()
@@ -112,6 +112,7 @@ class UpdateTree extends React.Component {
     render() {
         return (
             <Container>
+                {this.state.family}
                 <TextField
                     label="Name"
                     value={this.state.name}
