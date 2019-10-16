@@ -21,6 +21,9 @@ pip install [dependancy name]
 pip freeze > requirements.txt  
 </code>
 
+<h2> Javascript dependencies </h2>
+<code> npm install d3-dtree -g npm-install-peers </code>
+
 neo4j-driver is deprecated. <br>
 <code> pip install </code> instead <br>
 

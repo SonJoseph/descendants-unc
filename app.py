@@ -5,12 +5,12 @@ from flask import jsonify
 
 app = Flask(__name__, static_folder='client/build')
 
-def connect(): # connect to neo4j instance 
-    graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
-    graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
-    graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
-    driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
-    return driver
+
+
+graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
+graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
+graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
+driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
 # Serve React App
 @app.route('/', defaults={'path': ''}) 
@@ -23,8 +23,8 @@ def serve(path):
 
 @app.route('/api/createnode/<name>')
 def createNode(name):
+    global driver
     inserted = ''
-    driver = connect()
     with driver.session() as session:
         result = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
         for record in result:
@@ -33,8 +33,8 @@ def createNode(name):
 
 @app.route('/api/gettrees')
 def getTrees():
+    global driver
     names = {'tree_roots' : []}
-    driver = connect()
     with driver.session() as session:
         result = session.run("MATCH(n:Person) WHERE EXISTS(n.root) RETURN DISTINCT n.name as name")
         for record in result: 
@@ -64,8 +64,10 @@ visited = set() # set
 
 @app.route('/api/gettree/<tree>')
 def getTree(tree):
+    global driver
+    global visited
     members = []
-    driver = connect()
+    visited = set() # clear this for every new request
     with driver.session() as session:
         members.append(addMember(session, tree, 1))
     return jsonify(members)
@@ -82,7 +84,7 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
         'textClass' : '',
         'depthOffset' : depth,
         'marriages' : [{
-            'spouse': '',
+            'spouse': {},
             'children' : []
         }],
         'extra' : {}
