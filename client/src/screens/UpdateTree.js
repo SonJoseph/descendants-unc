@@ -2,8 +2,13 @@ import React from 'react'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
+import * as d3 from "d3"
+import _ from 'lodash';
+import dTree from 'd3-dtree';
 
-class UpdateTree extends React.Component {    
+window.d3 = d3;
+
+class UpdateTree extends React.Component {
     /*
         A form to create a node
     */
@@ -16,9 +21,10 @@ class UpdateTree extends React.Component {
     }
 
     createNode = async () => {
-        const response = await fetch('/api/createnode/' + this.state.name) 
+        const response = await fetch('/api/createnode/' + this.state.name)
         const myJson = await response.json()
         console.log(myJson)
+        //drawNode()
         // this.setState({message : myJson})
     }
 
@@ -27,6 +33,81 @@ class UpdateTree extends React.Component {
             name : e.target.value
         })
     }
+
+
+   drawNode = () => {
+     d3.select(this.refs.tree)
+     .selectAll("circle")
+     .data([1, 2, 3])
+     .enter()
+     .append("circle")
+     .attr("cx", function(d, i) { return i * 50 + 47; })
+     .attr("cy", function(d, i) { return i * 25 + 30; })
+     .attr("r", function(d, i) { return (i+5) * 2; })
+     .attr("fill", "purple")
+   }
+
+
+   drawTree = () => {
+     var treeData = [{
+  "name": "Niclas Superlongsurname",
+  "class": "man",
+  "textClass": "emphasis",
+  "marriages": [{
+    "spouse": {
+      "name": "Iliana",
+      "class": "woman",
+      "extra": {
+        "nickname": "Illi"
+      }
+    },
+    "children": [{
+      "name": "James",
+      "class": "man",
+      "marriages": [{
+        "spouse": {
+          "name": "Alexandra",
+          "class": "woman"
+        },
+        "children": [{
+          "name": "Eric",
+          "class": "man",
+          "marriages": [{
+            "spouse": {
+              "name": "Eva",
+              "class": "woman"
+            }
+          }]
+        }, {
+          "name": "Jane",
+          "class": "woman"
+        }, {
+          "name": "Jasper",
+          "class": "man"
+        }, {
+          "name": "Emma",
+          "class": "woman"
+        }, {
+          "name": "Julia",
+          "class": "woman"
+        }, {
+          "name": "Jessica",
+          "class": "woman"
+        }]
+      }]
+    }]
+  }]
+}]
+
+      	dTree.init(treeData,
+					{
+						target: this.refs.tree,
+						debug: true,
+						height: 800,
+						width: 1200
+					});
+   }
+
 
     render() {
         return (
@@ -37,7 +118,14 @@ class UpdateTree extends React.Component {
                     onChange={this.handleChange}
                 />
                 <Button onClick={this.createNode}>Create Node</Button>
+                <Button onClick={this.drawTree}>Draw Node</Button>
+
+                <svg ref="tree" id = "graph" width={800} height={800}></svg>
+
+
+
             </Container>
+
         )
     }
 }
