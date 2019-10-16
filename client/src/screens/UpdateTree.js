@@ -21,15 +21,10 @@ class UpdateTree extends React.Component {
     }
 
     getTree = async () => {
-        console.log(this.state.family)
         const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
         this.setState({tree : myJson})
         console.log(myJson)
-    }
-
-    componentDidMount() {
-        this.getTree()
     }
 
     handleChange = (e) => {
@@ -38,6 +33,9 @@ class UpdateTree extends React.Component {
         })
     }
 
+    componentDidMount() {
+        this.getTree()
+    }
 
    drawNode = () => {
      d3.select(this.refs.tree)
@@ -53,55 +51,7 @@ class UpdateTree extends React.Component {
 
 
    drawTree = () => {
-     var treeData = [{
-  "name": "Niclas Superlongsurname",
-  "class": "man",
-  "textClass": "emphasis",
-  "marriages": [{
-    "spouse": {
-      "name": "Iliana",
-      "class": "woman",
-      "extra": {
-        "nickname": "Illi"
-      }
-    },
-    "children": [{
-      "name": "James",
-      "class": "man",
-      "marriages": [{
-        "spouse": {
-          "name": "Alexandra",
-          "class": "woman"
-        },
-        "children": [{
-          "name": "Eric",
-          "class": "man",
-          "marriages": [{
-            "spouse": {
-              "name": "Eva",
-              "class": "woman"
-            }
-          }]
-        }, {
-          "name": "Jane",
-          "class": "woman"
-        }, {
-          "name": "Jasper",
-          "class": "man"
-        }, {
-          "name": "Emma",
-          "class": "woman"
-        }, {
-          "name": "Julia",
-          "class": "woman"
-        }, {
-          "name": "Jessica",
-          "class": "woman"
-        }]
-      }]
-    }]
-  }]
-}]
+     var treeData = this.state.tree
 
       	dTree.init(treeData,
 					{
