@@ -26,7 +26,7 @@ class UpdateTree extends React.Component {
             newPerson : {
                 name : "",
                 relnType : "",
-                relnOf : "" // ex: name is relnType of relnOf
+                relnWith : "" // ex: relnWith is relnType of name
             },
             confirm_msg : "" // for node creation
         }
@@ -36,24 +36,12 @@ class UpdateTree extends React.Component {
         const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
         this.setState({tree : myJson})
-        console.log(myJson)
+        this.drawTree()
     }
 
     componentDidMount() {
         this.getTree()
     }
-
-   drawNode = () => {
-     d3.select(this.refs.tree)
-     .selectAll("circle")
-     .data([1, 2, 3])
-     .enter()
-     .append("circle")
-     .attr("cx", function(d, i) { return i * 50 + 47; })
-     .attr("cy", function(d, i) { return i * 25 + 30; })
-     .attr("r", function(d, i) { return (i+5) * 2; })
-     .attr("fill", "purple")
-   }
 
 
    drawTree = () => {
@@ -88,7 +76,7 @@ class UpdateTree extends React.Component {
         // button event for selecting a node
         this.setState({
             newPerson : {
-                relnOf : name,
+                relnWith : name,
                 name : this.state.newPerson.name,
                 relnType : this.state.newPerson.relnType
             }
@@ -101,7 +89,7 @@ class UpdateTree extends React.Component {
             newPerson : {
                 name : e.target.value,
                 relnType : this.state.newPerson.relnType,
-                relnOf : this.state.newPerson.relnOf 
+                relnWith : this.state.newPerson.relnWith 
             }
         })
         console.log(e.target.value)
@@ -113,15 +101,23 @@ class UpdateTree extends React.Component {
             newPerson : {
                 name : this.state.newPerson.name,
                 relnType : e.target.value,
-                relnOf : this.state.newPerson.relnOf
+                relnWith : this.state.newPerson.relnWith
             }
         })
         console.log(this.state.newPerson.relnType);
     }
 
-    createNode = () => {
-        this.setState({confirm_msg : 'Are you sure you want to add ' + this.state.newPerson.name + ' as a ' 
-        + this.state.newPerson.relnType + ' of ' + this.state.newPerson.relnOf + '?'});
+    createNode = async () => {
+        /* We should probably ask for validation before creating the node
+        this.setState({confirm_msg : 'Are you sure you want to add ' + this.state.newPerson.name + ' where ' + this.state.newPerson.relnWith
+        +  ' is the ' + this.state.newPerson.relnType});
+        */
+       //name=<name>&relnWith=<relOf>&relnType=<relnType>
+        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnType='+this.state.newPerson.relnType
+        const response = await fetch(url)
+        const myJson = await response.json()
+        console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
+        this.getTree() 
     }
 
     render() {
@@ -130,19 +126,19 @@ class UpdateTree extends React.Component {
 
             <SplitPane split="vertical" defaultSize={350}>
                         <div>
-                            Selected Person: {this.state.newPerson.relnOf}
+                            Selected Person: {this.state.newPerson.relnWith}
                             <TextField
                                 label="New Person"
                                 value={this.state.newPerson.name}
                                 onChange={this.typeName}
                             />
-                            <InputLabel >What is {this.state.newPerson.name}'s relationship to {this.state.newPerson.relnOf}? </InputLabel>
+                            <InputLabel >What is {this.state.newPerson.relnWith}'s relationship to {this.state.newPerson.name} </InputLabel>
                             <Select
                                 value={this.state.newPerson.relnType}
                                 onChange={this.selectRelationship}
                             >
                                 <MenuItem value={'spouse'}>Spouse</MenuItem>
-                                <MenuItem value={'child'}>Child</MenuItem>
+                                <MenuItem value={'parent'}>Parent</MenuItem>
                             </Select>
                             <Button onClick={this.createNode}>Create Node</Button>
                             {this.state.confirm_msg}
@@ -150,8 +146,8 @@ class UpdateTree extends React.Component {
                         <div>
                             {this.state.family}'s Family
                             <svg ref="tree" id = "graph" width={800} height={500}></svg>
-                            <Button onClick={this.getTree}>Get Tree data</Button>
-                            <Button onClick={this.drawTree}>Draw Node</Button>
+                            {/* <Button onClick={this.getTree}>Get Tree data</Button>
+                            <Button onClick={this.drawTree}>Draw Node</Button> */}
                         </div>
             </SplitPane>
 
