@@ -5,8 +5,6 @@ from flask import jsonify
 
 app = Flask(__name__, static_folder='client/build')
 
-
-
 graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
 graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
 graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
@@ -21,15 +19,18 @@ def serve(path):
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
-@app.route('/api/createnode/<name>')
-def createNode(name):
+@app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnType=<relnType>')
+def createNode(name, relnWith, relnType):
     global driver
-    inserted = ''
     with driver.session() as session:
-        result = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
-        for record in result:
-            inserted = record["name"]
-    return jsonify(inserted)
+        createPerson = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
+        print("MATCH (a:Person),(b:Person) WHERE a.name = " + name + " AND b.name = " + relnWith + 
+        " CREATE (a)-[r:"+relnType+"]->(b) RETURN type(r)")
+        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND b.name = '" + relnWith + 
+        "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
+        # for record in result:
+        #     inserted = record["name"]
+    return jsonify("dummy")
 
 @app.route('/api/gettrees')
 def getTrees():
@@ -94,14 +95,23 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
 
     children = session.run("MATCH (Person { name: '"+ tree +"' })-[:parent]->(person) RETURN person.name as name") # array of the obj{name : ''}
 
+    c_json = None
     for child in children:
-        member['marriages'][0]['children'].append(
-            addMember(session, child['name'], depth+1)
-        )
+        c_json = addMember(session, child['name'], depth+1)
+        if c_json != None:
+            member['marriages'][0]['children'].append(
+                c_json #addMember(session, child['name'], depth+1)
+            )
     spouses = session.run("MATCH (Person { name: '"+ tree +"' })-[:spouse]-(person) RETURN person.name as name") # array of obj{name : ''}
 
+    sp_json = None
     for spouse in spouses:
-        member['marriages'][0]['spouse'] = addMember(session, spouse['name'], depth)
+        sp_json = addMember(session, spouse['name'], depth)
+        if sp_json != None:
+            member['marriages'][0]['spouse'] = sp_json
+
+    if c_json == None and sp_json == None:
+        del member['marriages'] # this may raise a KeyError if marriages does not exist
 
     return member
 
