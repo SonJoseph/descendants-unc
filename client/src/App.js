@@ -1,15 +1,24 @@
 import Button from '@material-ui/core/Button'
 import React from 'react'
-import { Link } from 'react-router-dom'
+
+import SelectTree from './screens/SelectTree'
+import UpdateTree from './screens/UpdateTree'
+import Home from './Home'
+
+import { Route, Link, BrowserRouter as Router } from 'react-router-dom'
 
 function App() {
   return  <div>
 	  	<h1> The Descendants Project </h1>
+      <Router>
+          <div>
+              <Route exact path="/" component={Home} />
+              <Route path="/select" component={SelectTree} />
+              <Route path="/update" component={UpdateTree} />
+          </div>
+      </Router>
+      )
 
-        <Link to = "/select" >
-          <Button  variant="outlined" color="primary" > View A Tree  </Button>
-        </Link>
-      
 	</div>
 }
 
