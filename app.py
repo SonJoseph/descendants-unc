@@ -6,6 +6,8 @@ from flask import jsonify
 app = Flask(__name__, static_folder='client/build')
 
 graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
+
+# 64-bit encoded stored in .properties file
 graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
 graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
 driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
@@ -31,6 +33,19 @@ def createNode(name, relnWith, relnType):
         # for record in result:
         #     inserted = record["name"]
     return jsonify("dummy")
+
+@app.route('/api/getnode/name=<name>')
+def getNode(name): # MATCH (n:Person { name: 'Alex' }) RETURN n
+    global driver
+    clientObj = {}
+    with driver.session() as session:
+        result = session.run('MATCH (n:Person { name: "' + name + '" }) RETURN n')
+        # How do we return all the properties as a json object?
+        for record in result:
+            properties = record['n'].items()
+            for key, val in properties:
+                clientObj[key] = val
+    return jsonify(clientObj)
 
 @app.route('/api/gettrees')
 def getTrees():
