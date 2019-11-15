@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container'
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { List, ListItem, ListItemText } from '@material-ui/core'
 
 import * as d3 from "d3"
 import _ from 'lodash'
@@ -23,18 +24,20 @@ class UpdateTree extends React.Component {
         this.state = {
             family : props.location.state.family,
             tree : [],
-            newPerson : {
+            newPerson : { // ex: relnWith is relnType of name
                 name : "",
                 relnType : "",
-                relnWith : "" // ex: relnWith is relnType of name
+                relnWith : "" // the selected node!
             },
-            confirm_msg : "" // for node creation
+            confirm_msg : "", // for node creation
+            selected : [] // store a properties object of the selected node as a list of key-value pairs
         }
     }
 
     getTree = async () => {
         const response = await fetch('/api/gettree/' + this.state.family)
         const myJson = await response.json()
+        console.log(myJson)
         this.setState({tree : myJson})
         this.drawTree()
     }
@@ -53,7 +56,12 @@ class UpdateTree extends React.Component {
                 height: 800,
                 width: 1200,
                 callbacks: {
-                    nodeClick: this.chooseNode
+                    nodeClick: this.chooseNode,
+                    /* Set the vertical space between nodes */
+                    nodeHeightSeperation : function(nodeWidth, nodeMaxHeight){
+                        return 20
+                    }
+                    
                 },
                 margin: {
                     top: 0,
@@ -81,6 +89,18 @@ class UpdateTree extends React.Component {
                 relnType : this.state.newPerson.relnType
             }
         })
+        this.getNode(name)
+   }
+
+   getNode = async (name) => {
+        const response = await fetch('/api/getnode/name=' + name)
+        const json = await response.json()
+        let arr = []
+        Object.keys(json).forEach(function(key) {
+            arr.push(json[key]);
+        })
+        
+        this.setState({selected : arr})
    }
 
     typeName = (e) => {
@@ -126,22 +146,34 @@ class UpdateTree extends React.Component {
 
             <SplitPane split="vertical" defaultSize={350}>
                         <div>
-                            Selected Person: {this.state.newPerson.relnWith}
-                            <TextField
-                                label="New Person"
-                                value={this.state.newPerson.name}
-                                onChange={this.typeName}
-                            />
-                            <InputLabel >What is {this.state.newPerson.relnWith}'s relationship to {this.state.newPerson.name} </InputLabel>
-                            <Select
-                                value={this.state.newPerson.relnType}
-                                onChange={this.selectRelationship}
-                            >
-                                <MenuItem value={'spouse'}>Spouse</MenuItem>
-                                <MenuItem value={'parent'}>Parent</MenuItem>
-                            </Select>
-                            <Button onClick={this.createNode}>Create Node</Button>
-                            {this.state.confirm_msg}
+                            {/* Selected Person: {this.state.newPerson.relnWith} */}
+                            
+                                <List>
+                                    {
+                                        this.state.selected.map(
+                                            (item) => <ListItem> {item} </ListItem>
+                                        )
+                                    }
+                                </List>
+                           
+                            <div id="addRelatedNode">
+                                
+                                <TextField
+                                    label="New Person"
+                                    value={this.state.newPerson.name}
+                                    onChange={this.typeName}
+                                />
+                                <InputLabel >What is {this.state.newPerson.relnWith}'s relationship to {this.state.newPerson.name} </InputLabel>
+                                <Select
+                                    value={this.state.newPerson.relnType}
+                                    onChange={this.selectRelationship}
+                                >
+                                    <MenuItem value={'spouse'}>Spouse</MenuItem>
+                                    <MenuItem value={'parent'}>Parent</MenuItem>
+                                </Select>
+                                <Button onClick={this.createNode}>Create Node</Button>
+                                {this.state.confirm_msg}
+                            </div>
                         </div>
                         <div>
                             {this.state.family}'s Family
