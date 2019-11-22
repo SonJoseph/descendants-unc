@@ -4,13 +4,15 @@ from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
 
 app = Flask(__name__, static_folder='client/build')
+driver = {}
 
-graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
-
-# 64-bit encoded stored in .properties file
-graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
-graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
-driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
+def connect(): # this is called when the app is created
+    global driver
+    graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
+    # 64-bit encoded stored in .properties file
+    graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
+    graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
+    driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
 # Serve React App
 @app.route('/', defaults={'path': ''}) 
@@ -131,6 +133,7 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
     return member
 
 if __name__ == '__main__':
+    connect()
     app.run(use_reloader=True, port=5000)
 
 '''

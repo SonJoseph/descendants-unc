@@ -30,7 +30,15 @@ class UpdateTree extends React.Component {
                 relnWith : "" // the selected node!
             },
             confirm_msg : "", // for node creation
-            selected : [] // store a properties object of the selected node as a list of key-value pairs
+            selected : [], //2d array. [[key, value], ...]
+
+            // Display properties
+            addReln : 'none', 
+            addRelnText : '',
+
+            updateNodeForm : 'none',
+            viewNodeInfo : 'block',
+            updateNodeText : 'Update Info'
         }
     }
 
@@ -87,7 +95,8 @@ class UpdateTree extends React.Component {
                 relnWith : name,
                 name : this.state.newPerson.name,
                 relnType : this.state.newPerson.relnType
-            }
+            },
+            addRelnText : 'Add Relationship to ' + name
         })
         this.getNode(name)
    }
@@ -95,10 +104,14 @@ class UpdateTree extends React.Component {
    getNode = async (name) => {
         const response = await fetch('/api/getnode/name=' + name)
         const json = await response.json()
+        
         let arr = []
-        Object.keys(json).forEach(function(key) {
-            arr.push(json[key]);
+
+        Object.entries(json).forEach(([key,value])=>{
+            arr.push([key, value])
         })
+
+        console.log(arr)
         
         this.setState({selected : arr})
    }
@@ -140,6 +153,37 @@ class UpdateTree extends React.Component {
         this.getTree() 
     }
 
+    handleFormNavigation = (id) => {
+        if(id == 'addReln'){
+            if(this.state.addReln == 'block'){
+                this.setState({
+                    addReln : 'none',
+                    addRelnText : 'Add Relationship to ' + this.state.newPerson.relnWith
+                });
+            }else{
+                this.setState({
+                    addReln : 'block',
+                    addRelnText : 'Hide Add Relationship'
+                });
+            }
+        }
+        if(id == 'updateNodeForm'){
+            if(this.state.updateNodeForm == 'none'){
+                this.setState({
+                    viewNodeInfo : 'none',
+                    updateNodeForm : 'block',
+                    updateNodeText : 'View Info'
+                })
+            }else{
+                this.setState({
+                    viewNodeInfo : 'block',
+                    updateNodeForm : 'none',
+                    updateNodeText : 'Update Info'
+                })
+            }
+        }
+    }
+
     render() {
         return (
             <Container>
@@ -147,17 +191,29 @@ class UpdateTree extends React.Component {
             <SplitPane split="vertical" defaultSize={350}>
                         <div>
                             {/* Selected Person: {this.state.newPerson.relnWith} */}
-                            
-                                <List>
+
+                                <List id="viewNodeInfo" style={{display : this.state.viewNodeInfo}}>
                                     {
                                         this.state.selected.map(
-                                            (item) => <ListItem> {item} </ListItem>
+                                            (item) =>
+                                                 <ListItem> 
+                                                     <ListItemText> 
+                                                         {item[0] + ': ' + item[1]}
+                                                    </ListItemText>
+                                                </ListItem>
                                         )
                                     }
-                                </List>
+                                </List> 
+
+                                <List id="updateNodeForm" style={{display : this.state.updateNodeForm}}>
+                                    {
+                                        this.state.selected.map(
+                                            (item) => <TextField label={item[0]} value={item[1]}> </TextField> 
+                                        )
+                                    }
+                                </List> 
                            
-                            <div id="addRelatedNode">
-                                
+                            <div id="addRelatedNode" style={{display : this.state.addReln}}>
                                 <TextField
                                     label="New Person"
                                     value={this.state.newPerson.name}
@@ -174,12 +230,17 @@ class UpdateTree extends React.Component {
                                 <Button onClick={this.createNode}>Create Node</Button>
                                 {this.state.confirm_msg}
                             </div>
+
+                            <Button onClick={() => this.handleFormNavigation('updateNodeForm')}> 
+                                {this.state.updateNodeText}
+                            </Button>
+                            <Button onClick={() => this.handleFormNavigation('addReln')}>
+                                {this.state.addRelnText}
+                            </Button>
                         </div>
                         <div>
                             {this.state.family}'s Family
                             <svg ref="tree" id = "graph" width={800} height={500}></svg>
-                            {/* <Button onClick={this.getTree}>Get Tree data</Button>
-                            <Button onClick={this.drawTree}>Draw Node</Button> */}
                         </div>
             </SplitPane>
 
