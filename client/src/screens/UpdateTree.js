@@ -33,7 +33,7 @@ class UpdateTree extends React.Component {
             selected : [], //2d array. [[key, value], ...]
 
             // Display properties
-            addReln : 'none', 
+            addReln : 'none',
             addRelnText : '',
 
             updateNodeForm : 'none',
@@ -69,7 +69,7 @@ class UpdateTree extends React.Component {
                     nodeHeightSeperation : function(nodeWidth, nodeMaxHeight){
                         return 20
                     }
-                    
+
                 },
                 margin: {
                     top: 0,
@@ -104,7 +104,7 @@ class UpdateTree extends React.Component {
    getNode = async (name) => {
         const response = await fetch('/api/getnode/name=' + name)
         const json = await response.json()
-        
+
         let arr = []
 
         Object.entries(json).forEach(([key,value])=>{
@@ -112,7 +112,7 @@ class UpdateTree extends React.Component {
         })
 
         console.log(arr)
-        
+
         this.setState({selected : arr})
    }
 
@@ -122,7 +122,7 @@ class UpdateTree extends React.Component {
             newPerson : {
                 name : e.target.value,
                 relnType : this.state.newPerson.relnType,
-                relnWith : this.state.newPerson.relnWith 
+                relnWith : this.state.newPerson.relnWith
             }
         })
         console.log(e.target.value)
@@ -150,7 +150,7 @@ class UpdateTree extends React.Component {
         const response = await fetch(url)
         const myJson = await response.json()
         console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
-        this.getTree() 
+        this.getTree()
     }
 
     handleFormNavigation = (id) => {
@@ -196,23 +196,23 @@ class UpdateTree extends React.Component {
                                     {
                                         this.state.selected.map(
                                             (item) =>
-                                                 <ListItem> 
-                                                     <ListItemText> 
+                                                 <ListItem>
+                                                     <ListItemText>
                                                          {item[0] + ': ' + item[1]}
                                                     </ListItemText>
                                                 </ListItem>
                                         )
                                     }
-                                </List> 
+                                </List>
 
                                 <List id="updateNodeForm" style={{display : this.state.updateNodeForm}}>
                                     {
                                         this.state.selected.map(
-                                            (item) => <TextField label={item[0]} value={item[1]}> </TextField> 
+                                            (item) => <TextField label={item[0]} value={item[1]}> </TextField>
                                         )
                                     }
-                                </List> 
-                           
+                                </List>
+
                             <div id="addRelatedNode" style={{display : this.state.addReln}}>
                                 <TextField
                                     label="New Person"
@@ -231,7 +231,7 @@ class UpdateTree extends React.Component {
                                 {this.state.confirm_msg}
                             </div>
 
-                            <Button onClick={() => this.handleFormNavigation('updateNodeForm')}> 
+                            <Button onClick={() => this.handleFormNavigation('updateNodeForm')}>
                                 {this.state.updateNodeText}
                             </Button>
                             <Button onClick={() => this.handleFormNavigation('addReln')}>

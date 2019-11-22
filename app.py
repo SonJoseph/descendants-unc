@@ -15,22 +15,30 @@ def connect(): # this is called when the app is created
     driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
 # Serve React App
-@app.route('/', defaults={'path': ''}) 
-@app.route('/<path:path>') 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
 def serve(path):
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
 
+@app.route('/api/createroot/name=<name>&birth=<birth>')
+def createTree(name, birth):
+    global driver
+    with driver.session() as session:
+        createRoot = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1}) RETURN n.name AS name")
+        return jsonify("dummy")
+
+
 @app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnType=<relnType>')
 def createNode(name, relnWith, relnType):
     global driver
     with driver.session() as session:
         createPerson = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
-        print("MATCH (a:Person),(b:Person) WHERE a.name = " + name + " AND b.name = " + relnWith + 
+        print("MATCH (a:Person),(b:Person) WHERE a.name = " + name + " AND b.name = " + relnWith +
         " CREATE (a)-[r:"+relnType+"]->(b) RETURN type(r)")
-        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND b.name = '" + relnWith + 
+        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND b.name = '" + relnWith +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
         # for record in result:
         #     inserted = record["name"]
@@ -55,7 +63,7 @@ def getTrees():
     names = {'tree_roots' : []}
     with driver.session() as session:
         result = session.run("MATCH(n:Person) WHERE EXISTS(n.root) RETURN DISTINCT n.name as name")
-        for record in result: 
+        for record in result:
             names['tree_roots'].append(record['name'])
     return jsonify(names)
 
@@ -94,7 +102,7 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
     global visited
 
     if(tree in visited):
-        return 
+        return
 
     member = {
         'name' : tree, # root
