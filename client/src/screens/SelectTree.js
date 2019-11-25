@@ -2,6 +2,7 @@ import React from 'react'
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import SplitPane from 'react-split-pane'
+import TextField from '@material-ui/core/TextField'
 
 class SelectTree extends React.Component {
     /*
@@ -12,14 +13,17 @@ class SelectTree extends React.Component {
         super(props)
         this.state = {
             tree_roots : [],
+            root_name:'',
+            root_birth:'',
             newRoot : { // root person of a new tree
-                name : "test",
-                birth : "hi"
+                name:'',
+                birth:''
             },
             updateRoot : 'none',
             viewNodeInfo : 'block',
-            updateNodeText : 'Create Tree'
+            updateNodeText : 'Create Tree!'
         }
+        this.updateRootInfo = this.updateRootInfo.bind(this)
     }
 
     getTreeRoots = async () => {
@@ -43,44 +47,50 @@ class SelectTree extends React.Component {
       const response = await fetch(url)
       const myJson = await response.json()
       console.log(myJson)
-
-      //redirect to new view for the tree
-      // this.props.history.push({
-      //   pathname: '/' + this.props.newRoot.name,
-      //   state: { family: tree }
-      // })
     }
 
     componentDidMount() {
         this.getTreeRoots()
     }
 
-    enterRootInfo = () => {
-      console.log(this.state)
-      if(this.state.updateRoot == 'none'){
+    updateRootInfo = (event) => {
+      this.setState({
+            [event.target.name]: event.target.value
+        // newRoot : {
+        //   name: 'jesus',
+        //   birth: '000'
+        // }
+        //
+     });
+   }
+
+   clickFinish = () => {
+     // Add this newly created root to trees array
+     this.state.tree_roots.push(this.state.newRoot.name)
+     console.log(this.state.tree_roots)
+     this.createRoot(this.state.root_name, this.state.root_birth)
+     // change view to the tree
+     this.updateTree(this.state.root_name)
+   }
 
           // this.setState({
-          //     viewNodeInfo : 'none',
-          //     updateRoot : 'block',
-          //     updateNodeText : 'Finish!'
+          //   newRoot : {
+          //       name : "Marissa",
+          //       birth : "04391939"
+          //   }
           // })
 
-          this.setState({
-            newRoot : {
-                name : "Janey",
-                birth : "04301998"
-            }
-          })
 
-          console.log(this.state.newRoot)
-          // Add this newly created root to trees array
-          this.state.tree_roots.push(this.state.newRoot)
-          this.createRoot("Janey", "04301998")
-      }
-    }
+
+    //}
 
     render() {
         return (
+          <SplitPane split='horizontal' defaultSize={200}>
+          <div>
+            <h1>The Descendants Project</h1>
+          </div>
+
           <SplitPane split="vertical" defaultSize={700}>
             <div>
                 <h1>Select Existing Tree</h1>
@@ -94,12 +104,18 @@ class SelectTree extends React.Component {
                 </List>
             </div>
             <div>
-              <h1>Create New Tree</h1>
-              <Button onClick={this.enterRootInfo} variant="outlined" color="primary">
+              <h1>Create Tree</h1>
+              <h2>Specify Root Information</h2>
+              <TextField label="Name" name='root_name' onChange={this.updateRootInfo}/>
+              <TextField label="Birth Date" name='root_birth' onChange={this.updateRootInfo}/>
+              <Button onClick={this.clickFinish} variant="outlined" color="primary" label="Finish">
                   {this.state.updateNodeText}
               </Button>
             </div>
             </SplitPane>
+
+          </SplitPane>
+
         )
     }
 }
