@@ -22,7 +22,7 @@ class UpdateTree extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            family : props.location.state.family,
+            family : props.location.state.family, // this is the id, not the name of the node
             tree : [],
             newPerson : { // ex: relnWith is relnType of name
                 name : "",
@@ -44,7 +44,8 @@ class UpdateTree extends React.Component {
     }
 
     getTree = async () => {
-        const response = await fetch('/api/gettree/' + this.state.family)
+      console.log(this.state.family)
+        const response = await fetch('/api/gettree/name=' + this.state.family.name + '&id='+ this.state.family.id)
         const myJson = await response.json()
         console.log(myJson)
         this.setState({tree : myJson})
@@ -94,17 +95,18 @@ class UpdateTree extends React.Component {
         this.setState({
             newPerson : {
                 name : this.state.newPerson.name,
-                relnId : id,
+                relnId : extra,
                 relnWith : name,
                 relnType : this.state.newPerson.relnType
             },
             addRelnText : 'Add Relationship to ' + name
         })
-        this.getNode(name)
+        console.log(this.state.newPerson.relnWith)
+        this.getNode(id)
    }
 
-   getNode = async (name) => {
-        const response = await fetch('/api/getnode/name=' + name)
+   getNode = async (id) => {
+        const response = await fetch('/api/getnode/id=' + id)
         const json = await response.json()
 
         let arr = []
@@ -114,6 +116,7 @@ class UpdateTree extends React.Component {
         })
 
         console.log(arr)
+        console.log("This is the relation id " + this.state.newPerson.relnId)
 
         this.setState({selected : arr})
    }
@@ -151,10 +154,10 @@ class UpdateTree extends React.Component {
         */
        //name=<name>&relnWith=<relOf>&relnType=<relnType>
         let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnId='+this.state.newPerson.relnId+'&relnType='+this.state.newPerson.relnType
-
+        console.log(url)
         const response = await fetch(url)
         const myJson = await response.json()
-        console.log(url)
+
         console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
         this.getTree()
     }
@@ -195,6 +198,7 @@ class UpdateTree extends React.Component {
             <Container>
 
             <SplitPane split="vertical" defaultSize={350}>
+
                         <div>
                             {/* Selected Person: {this.state.newPerson.relnWith} */}
 
@@ -245,7 +249,7 @@ class UpdateTree extends React.Component {
                             </Button>
                         </div>
                         <div>
-                            {this.state.family}'s Family
+                            {this.state.family.name}'s Family
                             <svg ref="tree" id = "graph" width={800} height={500}></svg>
                         </div>
             </SplitPane>

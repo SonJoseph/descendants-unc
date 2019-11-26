@@ -27,8 +27,10 @@ def serve(path):
 @app.route('/api/createroot/name=<name>&birth=<birth>')
 def createTree(name, birth):
     global driver
+    id = uuid.uuid4().urn
+    id = uid[9:]
     with driver.session() as session:
-        createRoot = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1}) RETURN n.name AS name")
+        createRoot = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :' + id + '}) RETURN n.name AS name")
         return jsonify("dummy")
 
 
@@ -37,23 +39,23 @@ def createNode(name, relnWith, relnId, relnType):
     global driver
     uid = uuid.uuid4().urn
     id = uid[9:]
+    print("does this work?")
     with driver.session() as session:
         createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
-        print("MATCH (a:Person),(b:Person) WHERE a.name = " + name + " AND b.name = " + relnWith +
-        " CREATE (a)-[r:"+relnType+"]->(b) RETURN type(r)")
-        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND a.id = '" + id +
-        "' AND b.name = '" + relnWith + "' AND b.id = '" + relnId +
+
+        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
+        "' AND b.id = '" + relnId +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
         # for record in result:
         #     inserted = record["name"]
     return jsonify("dummy")
 
-@app.route('/api/getnode/name=<name>')
-def getNode(name): # MATCH (n:Person { name: 'Alex' }) RETURN n
+@app.route('/api/getnode/id=<id>')
+def getNode(id): # MATCH (n:Person { name: 'Alex' }) RETURN n
     global driver
     clientObj = {}
     with driver.session() as session:
-        result = session.run('MATCH (n:Person { name: "' + name + '" }) RETURN n')
+        result = session.run('MATCH (n:Person { id: "' + id + '" }) RETURN n')
         # How do we return all the properties as a json object?
         for record in result:
             properties = record['n'].items()
@@ -66,9 +68,9 @@ def getTrees():
     global driver
     names = {'tree_roots' : []}
     with driver.session() as session:
-        result = session.run("MATCH(n:Person) WHERE EXISTS(n.root) RETURN DISTINCT n.name as name")
+        result = session.run("MATCH(n:Person) WHERE EXISTS(n.root) RETURN DISTINCT n.name as name, n.id as id")
         for record in result:
-            names['tree_roots'].append(record['name'])
+            names['tree_roots'].append({ 'name': record['name'], 'id': record['id']})
     return jsonify(names)
 
 '''
@@ -92,24 +94,27 @@ def getTrees():
 
 visited = set() # set
 
-@app.route('/api/gettree/<tree>')
-def getTree(tree):
+@app.route('/api/gettree/name=<name>&id=<id>')
+def getTree(name, id):
     global driver
     global visited
+    print(id)
     members = []
     visited = set() # clear this for every new request
     with driver.session() as session:
-        members.append(addMember(session, tree, 1))
+        members.append(addMember(session, name, id, 1))
     return jsonify(members)
 
-def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
+def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the root
     global visited
 
-    if(tree in visited):
+    print(id)
+
+    if(id in visited):
         return
 
     member = {
-        'name' : tree, # root
+        'name' : name, # root
         'class' : '',
         'textClass' : '',
         'depthOffset' : depth,
@@ -117,25 +122,25 @@ def addMember(session, tree, depth): # DFS ... 'tree' is the name of the root
             'spouse': {},
             'children' : []
         }],
-        'extra' : {}
+        'extra' : id
     }
 
-    visited.add(tree)
+    visited.add(id)
 
-    children = session.run("MATCH (Person { name: '"+ tree +"' })-[:parent]->(person) RETURN person.name as name") # array of the obj{name : ''}
+    children = session.run("MATCH (Person { id: '"+ id +"' })-[:parent]->(person) RETURN person.name as name, person.id as id") # array of the obj{name : ''}
 
     c_json = None
     for child in children:
-        c_json = addMember(session, child['name'], depth+1)
+        c_json = addMember(session, child['name'], child['id'], depth+1)
         if c_json != None:
             member['marriages'][0]['children'].append(
                 c_json #addMember(session, child['name'], depth+1)
             )
-    spouses = session.run("MATCH (Person { name: '"+ tree +"' })-[:spouse]-(person) RETURN person.name as name") # array of obj{name : ''}
+    spouses = session.run("MATCH (Person {id: '"+ id +"' })-[:spouse]-(person) RETURN person.name as name, person.id as id") # array of obj{name : ''}
 
     sp_json = None
     for spouse in spouses:
-        sp_json = addMember(session, spouse['name'], depth)
+        sp_json = addMember(session, spouse['name'], spouse['id'], depth)
         if sp_json != None:
             member['marriages'][0]['spouse'] = sp_json
 
