@@ -58,6 +58,8 @@ class UpdateTree extends React.Component {
 
 
    drawTree = () => {
+     // var svg = document.getElementById("graph")
+     // svg.selectAll("*").remove()
      var treeData = this.state.tree
           dTree.init(treeData,
             {
