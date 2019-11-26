@@ -26,6 +26,7 @@ class UpdateTree extends React.Component {
             tree : [],
             newPerson : { // ex: relnWith is relnType of name
                 name : "",
+                relnId : "",
                 relnType : "",
                 relnWith : "" // the selected node!
             },
@@ -92,8 +93,9 @@ class UpdateTree extends React.Component {
         // button event for selecting a node
         this.setState({
             newPerson : {
-                relnWith : name,
                 name : this.state.newPerson.name,
+                relnId : id,
+                relnWith : name,
                 relnType : this.state.newPerson.relnType
             },
             addRelnText : 'Add Relationship to ' + name
@@ -121,6 +123,7 @@ class UpdateTree extends React.Component {
         this.setState({
             newPerson : {
                 name : e.target.value,
+                relnId : this.state.newPerson.relnId,
                 relnType : this.state.newPerson.relnType,
                 relnWith : this.state.newPerson.relnWith
             }
@@ -133,6 +136,7 @@ class UpdateTree extends React.Component {
         this.setState({
             newPerson : {
                 name : this.state.newPerson.name,
+                relnId : this.state.newPerson.relnId,
                 relnType : e.target.value,
                 relnWith : this.state.newPerson.relnWith
             }
@@ -146,9 +150,11 @@ class UpdateTree extends React.Component {
         +  ' is the ' + this.state.newPerson.relnType});
         */
        //name=<name>&relnWith=<relOf>&relnType=<relnType>
-        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnType='+this.state.newPerson.relnType
+        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnId='+this.state.newPerson.relnId+'&relnType='+this.state.newPerson.relnType
+
         const response = await fetch(url)
         const myJson = await response.json()
+        console.log(url)
         console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
         this.getTree()
     }

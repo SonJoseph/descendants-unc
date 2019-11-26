@@ -1,4 +1,5 @@
 import os
+import uuid
 from flask import Flask, send_from_directory
 from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
@@ -31,14 +32,17 @@ def createTree(name, birth):
         return jsonify("dummy")
 
 
-@app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnType=<relnType>')
-def createNode(name, relnWith, relnType):
+@app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnId=<relnId>&relnType=<relnType>')
+def createNode(name, relnWith, relnId, relnType):
     global driver
+    uid = uuid.uuid4().urn
+    id = uid[9:]
     with driver.session() as session:
-        createPerson = session.run("CREATE (n:Person { name: '"+name+"' }) RETURN n.name AS name")
+        createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
         print("MATCH (a:Person),(b:Person) WHERE a.name = " + name + " AND b.name = " + relnWith +
         " CREATE (a)-[r:"+relnType+"]->(b) RETURN type(r)")
-        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND b.name = '" + relnWith +
+        createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.name = '" + name + "' AND a.id = '" + id +
+        "' AND b.name = '" + relnWith + "' AND b.id = '" + relnId +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
         # for record in result:
         #     inserted = record["name"]
