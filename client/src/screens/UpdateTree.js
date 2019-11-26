@@ -44,7 +44,7 @@ class UpdateTree extends React.Component {
     }
 
     getTree = async () => {
-      console.log(this.state.family)
+        console.log(this.state.family)
         const response = await fetch('/api/gettree/name=' + this.state.family.name + '&id='+ this.state.family.id)
         const myJson = await response.json()
         console.log(myJson)
