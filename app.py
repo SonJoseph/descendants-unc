@@ -27,11 +27,12 @@ def serve(path):
 @app.route('/api/createroot/name=<name>&birth=<birth>')
 def createTree(name, birth):
     global driver
-    id = uuid.uuid4().urn
+    uid = uuid.uuid4().urn
     id = uid[9:]
     with driver.session() as session:
-        createRoot = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :' + id + '}) RETURN n.name AS name")
-        return jsonify("dummy")
+        result = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :' + id + '}) RETURN n.name AS name, n.id AS id")
+        for record in result:
+            return jsonify({ 'name': record['name'], 'id': record['id']})
 
 
 @app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnId=<relnId>&relnType=<relnType>')
