@@ -20,7 +20,7 @@ class CreateTree extends React.Component {
               [event.target.name]: event.target.value
        });
      }
-  
+
      updateDocsArr = (event) => {
        this.state.root_documents.push({
          name: this.state.root_doc_name,
@@ -30,8 +30,8 @@ class CreateTree extends React.Component {
        // clear input fields
        this.cleanInput()
      }
-  
-  
+
+
      cleanInput = () => {
        const docNameField = document.getElementById('doc_name');
        const docLinkField = document.getElementById('doc_link');
@@ -52,12 +52,12 @@ class CreateTree extends React.Component {
         let url = '/api/createroot/name='+person.name+'&birth='+person.birth
         const response = await fetch(url)
         const myJson = await response.json()
-        
+
         this.props.history.push({
             pathname: '/update',
             state: { family: myJson }
         })
-    }  
+    }
 
     render(){
         return(
@@ -65,8 +65,8 @@ class CreateTree extends React.Component {
                 <h1>Create Tree</h1>
                 <h2>Specify Root Information</h2>
                 <TextField label="Name" name='root_name' onChange={this.updateRootInfo}/>
-                <TextField label="Birth Date" name='root_birth' onChange={this.updateRootInfo}/>
-                <TextField label="Death Date" name='root_death' onChange={this.updateRootInfo}/>
+                <TextField label="Birth Date" name='root_birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                <TextField label="Death Date" name='root_death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
 
                 <div>
                 <TextField label="Document Name" name='root_doc_name' id="doc_name" onChange={this.updateRootInfo} />
