@@ -30,7 +30,7 @@ def createTree(name, birth):
     uid = uuid.uuid4().urn
     id = uid[9:]
     with driver.session() as session:
-        result = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :' + id + '}) RETURN n.name AS name, n.id AS id")
+        result = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :'"+ id +"'}) RETURN n.name AS name, n.id AS id")
         for record in result:
             return jsonify({ 'name': record['name'], 'id': record['id']})
 
@@ -40,7 +40,6 @@ def createNode(name, relnWith, relnId, relnType):
     global driver
     uid = uuid.uuid4().urn
     id = uid[9:]
-    print("does this work?")
     with driver.session() as session:
         createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
 

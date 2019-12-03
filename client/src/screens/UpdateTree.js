@@ -104,7 +104,7 @@ class UpdateTree extends React.Component {
             addRelnText : 'Add Relationship to ' + name
         })
         console.log(this.state.newPerson.relnWith)
-        this.getNode(id)
+        this.getNode(this.state.newPerson.relnId)
    }
 
    getNode = async (id) => {
