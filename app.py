@@ -76,17 +76,26 @@ def createNode(name, relnId, relnType, spouseId):
         createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
         "' AND b.id = '" + relnId +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
+
+        # case when adding a node to a singleton
         if (relnType == 'parent' and spouseId == "undefined"):
             print("HELLO")
             uid2 = uuid.uuid4().urn
             id2 = uid2[9:]
+            # create new person for the undefined spouse
             naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"'}) RETURN n.id as id")
+
+            # create spousal relationship between undefined spouse and relnId
             createSpouseReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + relnId +
             "' AND b.id = '" + naSpouse.single()['id'] +
             "' CREATE (a)-[r:spouse]->(b) RETURN type(r)")
+
+            # create relationship between undefined spouse and newly created individual
             createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
             "' AND b.id = '" + naSpouse.single()['id'] +
             "CREATE (b)-[r:" +relnType+ "]->(a) RETURN type(r)")
+
+        # case when adding a node to either spouse
         elif (relnType == 'parent'):
             print("HERE")
             createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
