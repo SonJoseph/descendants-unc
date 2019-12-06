@@ -55,20 +55,44 @@ def createTree(name, birth):
             return jsonify({ 'name': record['name'], 'id': record['id']})
 
 
-@app.route('/api/createnode/name=<name>&relnWith=<relnWith>&relnId=<relnId>&relnType=<relnType>')
-def createNode(name, relnWith, relnId, relnType):
+@app.route('/api/getspouseid/nodeid=<nodeid>')
+def getSpouseId(nodeid):
+    global driver
+    with driver.session() as session:
+        result = session.run("MATCH (n:Person {id: " + "'" + nodeid + "'" + "})-[:spouse]-(target:Person) RETURN target.id AS spouseId")
+        if (result.peek() is None):
+            return jsonify("None")
+        else:
+            return jsonify({'spouseId': result.single()['spouseId']})
+
+@app.route('/api/createnode/name=<name>&relnId=<relnId>&relnType=<relnType>&spouseId=<spouseId>')
+def createNode(name, relnId, relnType, spouseId):
     global driver
     uid = uuid.uuid4().urn
     id = uid[9:]
     with driver.session() as session:
+        print(spouseId)
         createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
-
         createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
         "' AND b.id = '" + relnId +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
-        # for record in result:
-        #     inserted = record["name"]
-    return jsonify("dummy")
+        if (relnType == 'parent' and spouseId == "undefined"):
+            print("HELLO")
+            uid2 = uuid.uuid4().urn
+            id2 = uid2[9:]
+            naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"'}) RETURN n.id as id")
+            createSpouseReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + relnId +
+            "' AND b.id = '" + naSpouse.single()['id'] +
+            "' CREATE (a)-[r:spouse]->(b) RETURN type(r)")
+            createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
+            "' AND b.id = '" + naSpouse.single()['id'] +
+            "CREATE (b)-[r:" +relnType+ "]->(a) RETURN type(r)")
+        elif (relnType == 'parent'):
+            print("HERE")
+            createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
+            "' AND b.id = '" + spouseId +
+            "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
+        return jsonify(relnType)
 
 @app.route('/api/deletenode/id=<id>')
 def deleteNode(id):

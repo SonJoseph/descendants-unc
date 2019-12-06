@@ -23,8 +23,13 @@ class AddNode extends React.Component {
         +  ' is the ' + this.state.newPerson.relnType});
         */
 
-        let url = '/api/createnode/name='+this.state.name+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType
- 
+        // get spouse id
+        const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
+        const json_spouse = await response_spouse.json()
+        var spouse_id = json_spouse['spouseId']
+
+        let url = '/api/createnode/name='+this.state.name+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+
         const response = await fetch(url)
         const myJson = await response.json()
 
@@ -59,7 +64,7 @@ class AddNode extends React.Component {
                         <MenuItem value={'parent'}>Parent</MenuItem>
                     </Select>
                     <Button onClick={this.createNode}>Create Node</Button>
-                    
+
                 </div>
                 <Button onClick={this.props.back}> Back </Button>
             </div>
