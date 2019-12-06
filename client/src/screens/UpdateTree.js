@@ -125,6 +125,8 @@ class UpdateTree extends React.Component {
         console.log("This is the relation id " + this.state.newPerson.relnId)
 
         this.setState({selected : arr})
+
+
    }
 
     typeName = (e) => {
@@ -154,15 +156,26 @@ class UpdateTree extends React.Component {
     }
 
     createNode = async () => {
+        var form = document.getElementById("selectRelFromDropdown").value
+        if (form == ""){
+          alert("Must select a relationship first!")
+        }
         /* We should probably ask for validation before creating the node
         this.setState({confirm_msg : 'Are you sure you want to add ' + this.state.newPerson.name + ' where ' + this.state.newPerson.relnWith
         +  ' is the ' + this.state.newPerson.relnType});
         */
        //name=<name>&relnWith=<relOf>&relnType=<relnType>
-        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnId='+this.state.newPerson.relnId+'&relnType='+this.state.newPerson.relnType
-        console.log(url)
+       // get spouse id
+       const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.state.newPerson.relnId)
+       const json_spouse = await response_spouse.json()
+       var spouse_id = json_spouse['spouseId']
+
+        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnId='+this.state.newPerson.relnId+'&relnType='+this.state.newPerson.relnType+'&spouseId='+spouse_id
+        console.log("API call: " + url)
         const response = await fetch(url)
         const myJson = await response.json()
+
+
 
         console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
         this.getTree()
@@ -237,9 +250,11 @@ class UpdateTree extends React.Component {
                                 />
                                 <InputLabel >What is {this.state.newPerson.relnWith}'s relationship to {this.state.newPerson.name} </InputLabel>
                                 <Select
+                                    id="selectRelFromDropdown"
                                     value={this.state.newPerson.relnType}
                                     onChange={this.selectRelationship}
                                 >
+                                <MenuItem value=""><em>None</em></MenuItem>
                                     <MenuItem value={'spouse'}>Spouse</MenuItem>
                                     <MenuItem value={'parent'}>Parent</MenuItem>
                                 </Select>
