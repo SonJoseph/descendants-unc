@@ -31,8 +31,13 @@ class UpdateTree extends React.Component {
                 relnWith : "" // the selected node!
             },
             confirm_msg : "", // for node creation
-            selected : [], //2d array. [[key, value], ...]
-
+            selectedID : "",
+            selected : { // holds info of clicked node
+                name : "",
+                birth : "",
+                death : "",
+                docs : []
+            },
             // Display properties
             addReln : 'none',
             addRelnText : '',
@@ -94,33 +99,66 @@ class UpdateTree extends React.Component {
 
     chooseNode = (name, extra, id) => {
         // button event for selecting a node
+
+        // is this even necessary?
         this.setState({
             newPerson : {
                 name : this.state.newPerson.name,
-                relnId : extra,
-                relnWith : name,
                 relnType : this.state.newPerson.relnType
+            },
+            selectedID : extra,
+            selected : {
+                name : name,
+                birth : "",
+                death: "",
+                docs : ""
             },
             addRelnText : 'Add Relationship to ' + name
         })
-        console.log(this.state.newPerson.relnWith)
-        this.getNode(this.state.newPerson.relnId)
+        this.getNode(this.state.selectedID)
+
    }
 
    getNode = async (id) => {
         const response = await fetch('/api/getnode/id=' + id)
         const json = await response.json()
-
-        let arr = []
-
+        // https://stackoverflow.com/questions/43040721/how-to-update-nested-state-properties-in-react
+        var someProperty = {...this.state.selected}
         Object.entries(json).forEach(([key,value])=>{
-            arr.push([key, value])
+          switch(key){
+            case "birth":
+              someProperty.birth = value;
+              break;
+            case "death":
+              someProperty.death = value;
+              break;
+            case "docs":
+              someProperty.docs = value;
+              break;
+            case "id":
+              this.setState({
+                selectedID : value
+              })
+              break;
+          }
+          this.setState({selected: someProperty})
         })
+        console.log(this.state.selected.name)
+        console.log("This is the selected id " + this.state.selectedID)
 
-        console.log(arr)
-        console.log("This is the relation id " + this.state.newPerson.relnId)
+        // this.setState({selected : arr})
+   }
 
-        this.setState({selected : arr})
+   getSelectedArray = () => {
+
+     var arr = [], item;
+     for (var key in this.state.selected){
+       item = [];
+       item[0] = key;
+       item[1] = this.state.selected[key];
+       arr.push(item);
+     }
+     return arr;
    }
 
     typeName = (e) => {
@@ -155,7 +193,7 @@ class UpdateTree extends React.Component {
         +  ' is the ' + this.state.newPerson.relnType});
         */
        //name=<name>&relnWith=<relOf>&relnType=<relnType>
-        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.newPerson.relnWith+'&relnId='+this.state.newPerson.relnId+'&relnType='+this.state.newPerson.relnType
+        let url = '/api/createnode/name='+this.state.newPerson.name+'&relnWith='+this.state.selected.name+'&relnId='+this.state.selectedID+'&relnType='+this.state.newPerson.relnType
         console.log(url)
         const response = await fetch(url)
         const myJson = await response.json()
@@ -163,13 +201,25 @@ class UpdateTree extends React.Component {
         console.log(myJson) //this is going to return dummy. however, before we proceed, we should check this response
         this.getTree()
     }
+    updateSelectedNode = (event) => {
+        this.setState({
+              [event.target.name]: event.target.value
+       });
+       console.log(event.target.name + " : " + event.target.value)
+     }
+
+    submitUpdates = async () => {
+      // change to be the real API call
+
+      this.handleFormNavigation('submitUpdates')
+    }
 
     handleFormNavigation = (id) => {
         if(id == 'addReln'){
             if(this.state.addReln == 'block'){
                 this.setState({
                     addReln : 'none',
-                    addRelnText : 'Add Relationship to ' + this.state.newPerson.relnWith
+                    addRelnText : 'Add Relationship to ' + this.state.selected.name
                 });
             }else{
                 this.setState({
@@ -180,6 +230,7 @@ class UpdateTree extends React.Component {
         }
         if(id == 'updateNodeForm'){
             if(this.state.updateNodeForm == 'none'){
+                console.log("update form of node named " + this.state.selected.name)
                 this.setState({
                     viewNodeInfo : 'none',
                     updateNodeForm : 'block',
@@ -192,6 +243,9 @@ class UpdateTree extends React.Component {
                     updateNodeText : 'Update Info'
                 })
             }
+        }
+        if (id == 'submitUpdates'){
+          //
         }
     }
 
@@ -206,7 +260,8 @@ class UpdateTree extends React.Component {
 
                                 <List id="viewNodeInfo" style={{display : this.state.viewNodeInfo}}>
                                     {
-                                        this.state.selected.map(
+
+                                        this.getSelectedArray().map(
                                             (item) =>
                                                  <ListItem>
                                                      <ListItemText>
@@ -218,11 +273,27 @@ class UpdateTree extends React.Component {
                                 </List>
 
                                 <List id="updateNodeForm" style={{display : this.state.updateNodeForm}}>
-                                    {
-                                        this.state.selected.map(
-                                            (item) => <TextField label={item[0]} value={item[1]}> </TextField>
-                                        )
-                                    }
+                                  <TextField label="Name" name='selected.name' onChange={this.updateSelectedNode}/>
+                                  <TextField required id="standard-required" label={this.state.selected.name} defaultValue="Hello World" margin="normal"  />
+                                  <TextField label="Birth Date" name='selected.birth' type="date" defaultValue={this.state.selected.birth} InputLabelProps={{shrink: true,}} onChange={this.updateSelectedNode}/>
+                                  <TextField label="Death Date" name='selected.death' type="date" defaultValue={this.state.selected.death} InputLabelProps={{shrink: true,}} onChange={this.updateSelectedNode}/>
+
+                                  <div>
+                                  <TextField label="Document Name" name='root_doc_name' id="doc_name" onChange={this.updateSelectedNode} />
+                                  <TextField label="Document Link" name='root_doc_link' id="doc_link" onChange={this.updateSelectedNode} />
+                                  // need to fix this one:
+                                  <Button onClick={this.updateDocsArr} variant="outlined" color="primary" label="AddDoc">Add This Document</Button>
+                                  </div>
+                                  {
+                                      // this.state.selected.map(
+                                      //     (item) => <TextField label={item[0]} defaultValue={item[1]}> </TextField>
+                                      // )
+                                  }
+
+                                    <Button onClick={() => this.submitUpdates}>
+                                        {"Save Changes"}
+                                    </Button>
+
                                 </List>
 
                             <div id="addRelatedNode" style={{display : this.state.addReln}}>
@@ -231,7 +302,7 @@ class UpdateTree extends React.Component {
                                     value={this.state.newPerson.name}
                                     onChange={this.typeName}
                                 />
-                                <InputLabel >What is {this.state.newPerson.relnWith}'s relationship to {this.state.newPerson.name} </InputLabel>
+                                <InputLabel >What is {this.state.selected.name}'s relationship to {this.state.newPerson.name} </InputLabel>
                                 <Select
                                     value={this.state.newPerson.relnType}
                                     onChange={this.selectRelationship}
