@@ -64,8 +64,7 @@ def createNode(name, relnWith, relnId, relnType):
         createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
 
         createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
-        "' AND b.id = '" + relnId +
-        "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
+        "' AND b.id = '" + relnId + "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
         # for record in result:
         #     inserted = record["name"]
     return jsonify("dummy")
