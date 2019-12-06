@@ -3,6 +3,7 @@ import uuid
 from flask import Flask, send_from_directory
 from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
+import json
 
 app = Flask(__name__, static_folder='client/build')
 driver = {}
@@ -23,6 +24,25 @@ def serve(path):
         return send_from_directory(app.static_folder, path)
     else:
         return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/api/updatenode/person=<person>')
+def updateNode(person):
+    with driver.session() as session:
+        person = json.loads(person)
+        fields = ""
+        p_id = "bfcba70d-499c-4878-a9bc-0ef17e873eef"
+        for prop in person.items():
+            print(prop)
+            if prop[0] == "id":
+                p_id = prop[1]
+            elif prop[0] == "documents":
+                fields+="n." + prop[0] + "=" + '"' + str(prop[1]) + '"' + ', '
+            else:
+                fields+="n." + prop[0] + "=" + "'" + prop[1] + "'" + ', '
+
+        fields=fields[:-2]
+        result = session.run("MATCH (n { id: " + "'" + p_id + "'" + " }) SET " + fields + " RETURN n")
+        return jsonify("node information updated!")
 
 @app.route('/api/createroot/name=<name>&birth=<birth>')
 def createTree(name, birth):

@@ -55,7 +55,7 @@ class SelectTree extends React.Component {
                 </List>
             </div>
             <CreateTree history={this.props.history} />
-            
+
             </SplitPane>
 
           </SplitPane>

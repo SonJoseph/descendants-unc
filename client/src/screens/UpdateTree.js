@@ -58,8 +58,12 @@ class UpdateTree extends React.Component {
 
 
    drawTree = () => {
-     // var svg = document.getElementById("graph")
-     // svg.selectAll("*").remove()
+     // clear the canvas
+    var svg = document.getElementById("graph")
+    while (svg.lastChild) {
+      svg.removeChild(svg.lastChild);
+    }
+
      var treeData = this.state.tree
           dTree.init(treeData,
             {
@@ -71,7 +75,7 @@ class UpdateTree extends React.Component {
                     nodeClick: this.chooseNode,
                     /* Set the vertical space between nodes */
                     nodeHeightSeperation : function(nodeWidth, nodeMaxHeight){
-                        return 20
+                        return 30;
                     }
 
                 },
@@ -250,9 +254,10 @@ class UpdateTree extends React.Component {
                                 {this.state.addRelnText}
                             </Button>
                         </div>
+
                         <div>
-                            {this.state.family.name}'s Family
-                            <svg ref="tree" id = "graph" width={800} height={500}></svg>
+                            <p class="text"> {this.state.family.name}'s Family </p>-
+                            <svg ref="tree" id = "graph" width={1000} height={700}></svg>
                         </div>
             </SplitPane>
 
