@@ -94,6 +94,7 @@ def createNode(name, relnWith, relnId, relnType, spouseId):
             "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")
         return jsonify(name + " and " + relnWith + " are now related through this relationship: " + relnType)
 
+
 @app.route('/api/getnode/id=<id>')
 def getNode(id): # MATCH (n:Person { name: 'Alex' }) RETURN n
     global driver
