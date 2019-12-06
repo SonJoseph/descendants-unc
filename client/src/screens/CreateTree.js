@@ -59,6 +59,19 @@ class CreateTree extends React.Component {
         })
     }
 
+    updateTest = async () => {
+      let updateInfo = {
+          name: 'Jeremiah',
+          birth: 'new birth date',
+          death: 'new death date',
+          documents: [{"name":"birth","link":"hi"},{"name":"death","link":"hi2"}]
+      }
+      let urltest = '/api/updatenode/person='+JSON.stringify(updateInfo)
+      const resptest = await fetch(urltest)
+      const myJsontest = await resptest.json()
+
+    }
+
     render(){
         return(
             <div>
@@ -77,6 +90,8 @@ class CreateTree extends React.Component {
                 <Button onClick={this.createRoot} variant="outlined" color="primary" label="Finish">
                     Create Tree!
                 </Button>
+
+                <Button onClick={this.updateTest} variant="outlined" color="primary"> Test Update Node </Button>
             </div>
         )
     }
