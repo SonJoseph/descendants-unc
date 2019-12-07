@@ -159,15 +159,16 @@ def getTrees():
 
 visited = set() # set
 
-@app.route('/api/gettree/name=<name>&id=<id>')
-def getTree(name, id):
+@app.route('/api/gettree/id=<id>')
+def getTree(id):
     global driver
     global visited
     
     members = []
     visited = set() # clear this for every new request
     with driver.session() as session:
-        members.append(addMember(session, name, id, 1))
+        root = json.loads(getNode(id).get_data(True))
+        members.append(addMember(session, root['name'], id, 1))
     return jsonify(members)
 
 def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the root

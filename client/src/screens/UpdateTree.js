@@ -16,7 +16,10 @@ class UpdateTree extends React.Component {
         super(props)
         this.state = {
             display : 'view',
-            family : props.location.state.family, // this is the id, not the name of the node
+
+            root_name : props.location.state.family.name,
+            root_id : props.location.state.family.id,
+
             tree : [],
 
             selectedID : "",
@@ -25,12 +28,13 @@ class UpdateTree extends React.Component {
         }
     }
 
-    getTree = async () => {
-        console.log(this.state.family)
-        const response = await fetch('/api/gettree/name=' + this.state.family.name + '&id='+ this.state.family.id)
+    getTree = async () => { // We currently can't change the root of the tree
+        const response = await fetch('/api/gettree/id='+ this.state.root_id)
         const myJson = await response.json()
-        console.log(myJson)
-        this.setState({tree : myJson})
+        this.setState({
+            root_name : myJson[0]['name'], // In case the name of the root changes
+            tree : myJson
+        })
         this.drawTree()
     }
 
@@ -110,6 +114,7 @@ class UpdateTree extends React.Component {
    }
 
    back = () => {
+       this.getNode(this.state.selectedID) // update info related to selected node in case there were a change
        this.setState({
            display : 'view'
        })
@@ -142,7 +147,7 @@ class UpdateTree extends React.Component {
                             </div>
 
                             <div>
-                                <p class="text"> {this.state.family.name}'s Family </p>-
+                                <p class="text"> {this.state.root_name}'s Family </p>-
                                 <svg ref="tree" id = "graph" width={1000} height={700}></svg>
                             </div>
                 </SplitPane>

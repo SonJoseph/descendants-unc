@@ -24,6 +24,7 @@ class SelectTree extends React.Component {
     }
 
     updateTree = (tree) => {
+        console.log(tree)
         this.props.history.push({
             pathname: '/update',
             state: { family: tree }

@@ -10,20 +10,15 @@ class UpdateNode extends React.Component {
     }
 
     updateSelectedNode = (event) => {
-
         this.json[event.target.name] = event.target.value
-        console.log(this.json)
-
      }
 
     submitUpdates = async () => {
-        // change to be the real API call
         let url = '/api/updatenode/person='+JSON.stringify(this.json);
-
         const response = await fetch(url)
         const myJson = await response.json()
-        console.log(myJson);
-       this.props.back();
+        this.props.refreshTree()
+        this.props.back()
     }
 
     render(){
