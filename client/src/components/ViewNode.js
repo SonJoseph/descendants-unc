@@ -17,9 +17,9 @@ class ViewNode extends React.Component {
                     {
                         this.props.selectedArr.map(
                             (item) =>
-                                    <ListItem>
-                                        <ListItemText>
-                                            {item[0] + ': ' + item[1]}
+                                <ListItem>
+                                    <ListItemText>
+                                        {item[0] + ': ' + item[1]}
                                     </ListItemText>
                                 </ListItem>
                         )

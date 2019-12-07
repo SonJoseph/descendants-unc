@@ -27,20 +27,20 @@ def serve(path):
 
 @app.route('/api/updatenode/person=<person>')
 def updateNode(person):
+    global driver
     with driver.session() as session:
         person = json.loads(person)
         fields = ""
-        p_id = "bfcba70d-499c-4878-a9bc-0ef17e873eef"
         for prop in person.items():
             print(prop)
             if prop[0] == "id":
-                p_id = prop[1]
-            elif prop[0] == "documents":
-                fields+="n." + prop[0] + "=" + '"' + str(prop[1]) + '"' + ', '
+                p_id = prop[1]            
+            elif type(prop[1]) is int:
+                fields += "n.{} = {}, ".format(prop[0], prop[1])
             else:
-                fields+="n." + prop[0] + "=" + "'" + prop[1] + "'" + ', '
-
+                fields += "n.{} = '{}', ".format(prop[0], prop[1])
         fields=fields[:-2]
+        query = "MATCH (n {{ id: '{}' }}) SET {} RETURN n".format(p_id, fields) # To insert a literal bracket, double-bracket
         result = session.run("MATCH (n { id: " + "'" + p_id + "'" + " }) SET " + fields + " RETURN n")
         return jsonify("node information updated!")
 
@@ -163,7 +163,7 @@ visited = set() # set
 def getTree(name, id):
     global driver
     global visited
-    print(id)
+    
     members = []
     visited = set() # clear this for every new request
     with driver.session() as session:
@@ -172,8 +172,6 @@ def getTree(name, id):
 
 def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the root
     global visited
-
-    print(id)
 
     if(id in visited):
         return

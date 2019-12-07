@@ -91,12 +91,15 @@ class UpdateTree extends React.Component {
 
            let arr = []
            Object.entries(json).forEach(([key,value])=>{
-               arr.push([key, value])
+                if(key !== "id" && key !== "root" && key !== "depth"){
+                    // Don't display these fields. If they're not displayed, then they also can't be edited
+                    arr.push([key, value])
+                }
            })
            this.setState({
-               selectedArr : arr,
-               selectedID : id,
-               selectedJson : json,
+               selectedArr : arr, // we display this
+               selectedID : id, 
+               selectedJson : json, // we use this to update fields
            })
        }
 

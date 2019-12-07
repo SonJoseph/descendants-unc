@@ -16,9 +16,13 @@ class UpdateNode extends React.Component {
 
      }
 
-    submitUpdates = () => {
+    submitUpdates = async () => {
         // change to be the real API call
-        console.log(this.json);
+        let url = '/api/updatenode/person='+JSON.stringify(this.json);
+
+        const response = await fetch(url)
+        const myJson = await response.json()
+        console.log(myJson);
        this.props.back();
     }
 
