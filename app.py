@@ -4,17 +4,14 @@ from flask import Flask, send_from_directory
 from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
 import json
+from credentials import url, user, password
 
 app = Flask(__name__, static_folder='client/build')
 driver = {}
 
 def connect(): # this is called when the app is created
     global driver
-    graphenedb_url = "bolt://hobby-fckkdnhaiekcgbkepdencedl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
-    # 64-bit encoded stored in .properties file
-    graphenedb_user = "app149651838-RVHPaR" # os.environ.get("GRAPHENEDB_BOLT_USER")
-    graphenedb_pass = "b.i967uZ8fBgGb.IT50Bwxmrk2ea3TT" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
-    driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
+    driver = GraphDatabase.driver(url, auth=basic_auth(user, password))
 
 # Serve React App
 @app.route('/', defaults={'path': ''})
@@ -81,7 +78,7 @@ def createNode(person):
 @app.route('/api/createrelationship/newId=<newId>&relnId=<relnId>&relnType=<relnType>&spouseId=<spouseId>')
 def createRelationship(newId, relnId, relnType, spouseId): #relnId is the id of the selected node
     global driver
-    
+
     id = newId # ID of the created node
     with driver.session() as session:
         createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
