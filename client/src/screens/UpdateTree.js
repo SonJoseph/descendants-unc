@@ -147,7 +147,7 @@ class UpdateTree extends React.Component {
                             </div>
 
                             <div>
-                                <p class="text"> {this.state.root_name}'s Family </p>-
+                                <p class="text"> {this.state.root_name}'s Family </p>
                                 <svg ref="tree" id = "graph" width={1000} height={700}></svg>
                             </div>
                 </SplitPane>

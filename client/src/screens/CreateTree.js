@@ -2,6 +2,8 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
+import Document from '../components/Document'
+
 class CreateTree extends React.Component {
 
     constructor(props){
@@ -10,33 +12,41 @@ class CreateTree extends React.Component {
             root_name:'',
             root_birth:'',
             root_death:'',
-            root_doc_name:'',
-            root_documents:[]
+            
+            documents:[
+                {
+                    name : '',
+                    link : ''
+                }
+            ] 
         }
     }
 
     updateRootInfo = (event) => {
         this.setState({
               [event.target.name]: event.target.value
-       });
+        });
      }
 
-     updateDocsArr = (event) => {
-       this.state.root_documents.push({
-         name: this.state.root_doc_name,
-         link: this.state.root_doc_link
+     addDocument = () => {
+       this.state.documents.push({
+           name : '',
+           link :''
        })
-       console.log(this.state.root_documents)
-       // clear input fields
-       this.cleanInput()
+       this.setState({
+           documents : this.state.documents
+       })
      }
 
+     deleteLastDocument = () => {
+        this.state.documents.splice(this.state.documents.length-1, 1);
+        this.setState({
+            documents : this.state.documents
+        })
+     }
 
-     cleanInput = () => {
-       const docNameField = document.getElementById('doc_name');
-       const docLinkField = document.getElementById('doc_link');
-         docNameField.value = ''
-         docLinkField.value = ''
+     updateDocument = (idx, key, val) => {
+         this.state.documents[idx][key] = val
      }
 
     // redirect to a new view for new tree
@@ -59,22 +69,28 @@ class CreateTree extends React.Component {
         })
     }
 
-    updateTest = async () => {
-      let updateInfo = {
-          name: 'Jeremiah',
-          birth: 'new birth date',
-          death: 'new death date',
-          documents: [{"name":"birth","link":"hi"},{"name":"death","link":"hi2"}]
-      }
-      let urltest = '/api/updatenode/person='+JSON.stringify(updateInfo)
-      const resptest = await fetch(urltest)
-      const myJsontest = await resptest.json()
-
-    }
-
     render(){
+        const Documents = []
+
+        for(let i=0; i<this.state.documents.length; i++){
+            console.log(this.state.documents[i].name + " : " + this.state.documents[i].link)
+            Documents.push(<Document 
+                idx = {i}
+                initName = {this.state.documents[i].name}
+                initLink = {this.state.documents[i].link}
+                updateDocument = {this.updateDocument}
+                // deleteDocument = {this.deleteDocument}
+            />)
+        }
+
+
         return(
             <div>
+                {Documents}
+
+                <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
+                <Button onClick={this.deleteLastDocument}> Delte Last Document </Button>
+
                 <h1>Create Tree</h1>
                 <h2>Specify Root Information</h2>
                 <TextField label="Name" name='root_name' onChange={this.updateRootInfo}/>
@@ -82,16 +98,13 @@ class CreateTree extends React.Component {
                 <TextField label="Death Date" name='root_death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
 
                 <div>
-                <TextField label="Document Name" name='root_doc_name' id="doc_name" onChange={this.updateRootInfo} />
-                <TextField label="Document Link" name='root_doc_link' id="doc_link" onChange={this.updateRootInfo} />
-                <Button onClick={this.updateDocsArr} variant="outlined" color="primary" label="AddDoc">Add This Document</Button>
+
+                >
                 </div>
 
                 <Button onClick={this.createRoot} variant="outlined" color="primary" label="Finish">
                     Create Tree!
                 </Button>
-
-                <Button onClick={this.updateTest} variant="outlined" color="primary"> Test Update Node </Button>
             </div>
         )
     }
