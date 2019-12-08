@@ -17,15 +17,15 @@ class CreateNode extends React.Component {
 
     constructor(props){
         super(props)
-        this.state = {
-            name:'',
-            gender:'',
-            birth:'',
-            death:'',
-            moreinfo:'',
+        this.state = { /* If we are updating a node, initialize the form to the existing fields */
+            name: this.props.isUpdate ? this.props.selectedJson['name'] : '',
+            gender: this.props.isUpdate ? this.props.selectedJson['gender'] : '',
+            birth: this.props.isUpdate ? this.props.selectedJson['birth'] : '',
+            death: this.props.isUpdate ? this.props.selectedJson['death'] : '',
+            moreinfo: this.props.isUpdate ? this.props.selectedJson['moreinfo'] : '',
             isRoot: this.props.isRoot,
 
-            documents:[
+            documents: this.props.isUpdate ? this.props.selectedJson['documents'] : [
                 {
                     name : '',
                     link : ''
@@ -34,7 +34,6 @@ class CreateNode extends React.Component {
 
             relnType:''
         }
-        console.log("ISROOT IS " + this.state.isRoot)
     }
 
     updateRootInfo = (event) => {
@@ -77,34 +76,38 @@ class CreateNode extends React.Component {
             documents: this.state.documents,
             moreinfo: this.state.moreinfo
         }
-        if(this.state.isRoot){
-            person['root'] = 1
-        }
-        let url = '/api/createnode/person='+JSON.stringify(person)
-        let response = await fetch(url)
-        let myJson = await response.json()
+        if(!this.props.isUpdate){
+            if(this.state.isRoot){
+                person['root'] = 1
+            }
+            let url = '/api/createnode/person='+JSON.stringify(person)
+            let response = await fetch(url)
+            let myJson = await response.json()
 
-        if(this.state.isRoot){
-            this.props.history.push({
-                pathname: '/update',
-                state: { family: myJson }
-            })
+            if(this.state.isRoot){
+                this.props.history.push({
+                    pathname: '/update',
+                    state: { family: myJson }
+                })
+            }else{
+                /*
+                    Create the specified relationship to the newly created node
+                */
+                // get spouse id
+                const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
+                const json_spouse = await response_spouse.json()
+                let spouse_id = json_spouse['spouseId']
+
+                url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+                const response = await fetch(url)
+                myJson = await response.json()
+
+                this.props.refreshTree() // go back to 'view node' in lhs of UpdateTree
+                this.props.back(false)
+            }
         }else{
-            /*
-                Create the specified relationship to the newly created node
-            */
-
-            // get spouse id
-            const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
-            const json_spouse = await response_spouse.json()
-            let spouse_id = json_spouse['spouseId']
-
-            url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
-            const response = await fetch(url)
-            myJson = await response.json()
-
-            this.props.refreshTree() // go back to 'view node' in lhs of UpdateTree
-            this.props.back()
+            person['id'] = this.props.selectedJson['id']
+            this.props.updateNode(person)
         }
     }
     render(){
@@ -128,7 +131,7 @@ class CreateNode extends React.Component {
                     <Grid container spacing={2} direction="row">
 
                     <Grid item>
-                      <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
+                      <TextField label="Name" name='name' onChange={this.updateRootInfo}  defaultValue={this.state.name}/>
                     </Grid>
 
                     <Grid item>
@@ -138,6 +141,7 @@ class CreateNode extends React.Component {
                               name="gender"
                               onChange={this.updateRootInfo}
                               value={this.state.gender}
+                              defaultValue={this.state.gender}
                           >
                           <MenuItem value="">  <em>None</em> </MenuItem>
                               <MenuItem value={'female'}>Female</MenuItem>
@@ -153,17 +157,17 @@ class CreateNode extends React.Component {
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
                       <Grid item>
-                        <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                        <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.birth}/>
                       </Grid>
                       <Grid item>
-                        <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                        <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
                       </Grid>
                     </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
                     <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="6"
-                    defaultValue="Add here..." variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo}/>
+                    defaultValue="Add here..." variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo} defaultValue={this.state.moreinfo}/>
                   </Grid>
 
                   <Grid item xs={12}>
@@ -180,7 +184,7 @@ class CreateNode extends React.Component {
                         <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
                         <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
                           {
-                              !this.state.isRoot && <CreateRelationship
+                              !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
                                   updateRelnForm = {this.updateRelnForm}
                                   selectedName = {this.props.selectedJson['name']}
                                   name = {this.state.name}
@@ -193,7 +197,7 @@ class CreateNode extends React.Component {
 
                 <Grid item>
                   <Button onClick={this.create} variant="contained" color="secondary" size="large" label="Finish"  style={{ margin: 8 }}>
-                      Create!
+                      {this.props.isUpdate ? 'Update' : 'Create'}
                   </Button>
                   {
                       !this.state.isRoot &&
@@ -206,8 +210,7 @@ class CreateNode extends React.Component {
 
                 </Grid>
                 </Grid>
-                </div>
-
+          </div>
         )
     }
 

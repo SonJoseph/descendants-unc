@@ -94,8 +94,11 @@ def createRelationship(newId, relnId, relnType, spouseId): #relnId is the id of 
             print("HELLO")
             uid2 = uuid.uuid4().urn
             id2 = uid2[9:]
+
             # create new person for the undefined spouse
-            naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"'}) RETURN n.id as id")
+            naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"', documents:'[]', "+
+            "birth:'', death:'', gender:'', moreinfo:''}) RETURN n.id as id")
+
             # create spousal relationship between undefined spouse and relnId
             createSpouseReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + relnId +
             "' AND b.id = '" + naSpouse.peek()['id'] +
@@ -131,7 +134,6 @@ def getNode(id): # MATCH (n:Person { name: 'Alex' }) RETURN n
     clientObj = {}
     with driver.session() as session:
         result = session.run('MATCH (n:Person { id: "' + id + '" }) RETURN n')
-        # How do we return all the properties as a json object?
         for record in result:
             properties = record['n'].items()
             for key, val in properties:
