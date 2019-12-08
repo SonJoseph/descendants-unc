@@ -1,14 +1,17 @@
 import React from 'react'
 import { Route , withRouter} from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl';
+import Grid from '@material-ui/core/Grid';
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
+import '../css/CreateNode.css';
 
 class CreateNode extends React.Component {
 
@@ -120,46 +123,91 @@ class CreateNode extends React.Component {
 
         return(
             <div>
-                <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center">
+                  <Grid item xs={12}>
+                    <Grid container spacing={2} direction="row">
 
-                <InputLabel id="demo-mutiple-name-label">Gender</InputLabel>
-                <Select
-                    name="gender"
-                    onChange={this.updateRootInfo}
-                    value={this.state.gender}
-                >
-                    <MenuItem value={'female'}>Female</MenuItem>
-                    <MenuItem value={'male'}>Male</MenuItem>
-                    <MenuItem value={'non-binary'}>NonBinary</MenuItem>
-                    <MenuItem value={'unknown'}>Unknown</MenuItem>
-                </Select>
+                    <Grid item>
+                      <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
+                    </Grid>
 
-                <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
-                <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
-                <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="4" defaultValue="Add here..." variant="outlined" onChange={this.updateRootInfo}/>
-                {Documents}
-                <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
-                <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
+                    <Grid item>
+                      <FormControl className="formControl">
+                        <InputLabel id="demo-mutiple-name-label">Gender</InputLabel>
+                          <Select
+                              name="gender"
+                              onChange={this.updateRootInfo}
+                              value={this.state.gender}
+                          >
+                          <MenuItem value="">  <em>None</em> </MenuItem>
+                              <MenuItem value={'female'}>Female</MenuItem>
+                              <MenuItem value={'male'}>Male</MenuItem>
+                              <MenuItem value={'non-binary'}>NonBinary</MenuItem>
+                              <MenuItem value={'unknown'}>Unknown</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      </Grid>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Grid container spacing={2} direction="row">
+                      <Grid item>
+                        <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                      </Grid>
+                      <Grid item>
+                        <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="6"
+                    defaultValue="Add here..." variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo}/>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Grid container direction="column" alignItems="center">
+                      <Grid item>
+                        <h3>Add your documents (if any) here:</h3>
+                      </Grid>
+
+                      <Grid item>
+                        {Documents}
+                      </Grid>
+
+                      <Grid item style={{ margin: 8 }}>
+                        <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
+                        <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
+                          {
+                              !this.state.isRoot && <CreateRelationship
+                                  updateRelnForm = {this.updateRelnForm}
+                                  selectedName = {this.props.selectedJson['name']}
+                                  name = {this.state.name}
+                              />
+                          }
+                      </Grid>
+                    </Grid>
+                  </Grid>
+
+
+                <Grid item>
+                  <Button onClick={this.create} variant="contained" color="secondary" size="large" label="Finish"  style={{ margin: 8 }}>
+                      Create!
+                  </Button>
                   {
-                      !this.state.isRoot && <CreateRelationship
-                          updateRelnForm = {this.updateRelnForm}
-                          selectedName = {this.props.selectedJson['name']}
-                          name = {this.state.name}
-                      />
+                      !this.state.isRoot &&
+                      <Button onClick={this.props.back} variant="outlined" color="secondary" size="large" label="Finish"  style={{ margin: 8 }}> Cancel </Button>
+                  }
+                  {
+                      this.state.isRoot &&
+                      <Button onClick={this.props.close} variant="outlined" color="secondary" size="large" label="Finish"  style={{ margin: 8 }}> Cancel </Button>
                   }
 
-                <Button onClick={this.create} variant="outlined" color="primary" label="Finish">
-                    Create!
-                </Button>
-                {
-                    !this.state.isRoot &&
-                    <Button onClick={this.props.back}> Cancel </Button>
-                }
-                {
-                    this.state.isRoot &&
-                    <Button onClick={this.props.close}> Cancel </Button>
-                }
-            </div>
+                </Grid>
+                </Grid>
+                </div>
+
         )
     }
 
