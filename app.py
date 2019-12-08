@@ -10,10 +10,10 @@ driver = {}
 
 def connect(): # this is called when the app is created
     global driver
-    graphenedb_url = "bolt://hobby-ghjkfkgldghkgbkegepiladl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
+    graphenedb_url = "bolt://hobby-fckkdnhaiekcgbkepdencedl.dbs.graphenedb.com:24787" # os.environ.get("GRAPHENEDB_BOLT_URL")
     # 64-bit encoded stored in .properties file
-    graphenedb_user = "app149651838-8ERHph" # os.environ.get("GRAPHENEDB_BOLT_USER")
-    graphenedb_pass = "b.qFtgBSt5iSFJ.KN7p9aZXizU8YlL3" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
+    graphenedb_user = "app149651838-RVHPaR" # os.environ.get("GRAPHENEDB_BOLT_USER")
+    graphenedb_pass = "b.i967uZ8fBgGb.IT50Bwxmrk2ea3TT" # os.environ.get("GRAPHENEDB_BOLT_PASSWORD")
     driver = GraphDatabase.driver(graphenedb_url, auth=basic_auth(graphenedb_user, graphenedb_pass))
 
 # Serve React App
@@ -44,13 +44,27 @@ def updateNode(person):
         result = session.run("MATCH (n { id: " + "'" + p_id + "'" + " }) SET " + fields + " RETURN n")
         return jsonify("node information updated!")
 
-@app.route('/api/createroot/name=<name>&birth=<birth>')
-def createTree(name, birth):
+@app.route('/api/createnodetest/person=<person>')
+def createNodeTest(person):
     global driver
+
     uid = uuid.uuid4().urn
     id = uid[9:]
+    obj = json.loads(person)
+    obj['id'] = id
+
+    fields = ''
+    for prop in obj.items():
+        if type(prop[1]) is int:
+            fields += '{} : {},'.format(prop[0], prop[1])
+        else:
+            fields += '{} : "{}",'.format(prop[0], prop[1]) # stringify all non-int values
+    fields = '{' + fields[:-1] + '}'
+
+    query = 'CREATE (n: Person {}) RETURN n.name AS name, n.id AS id'.format(fields)
+    print(query)
     with driver.session() as session:
-        result = session.run("CREATE (n: Person { name: '"+name+"', birth: '"+birth+"', depth: 0, root: 1, id :'"+ id +"'}) RETURN n.name AS name, n.id AS id")
+        result = session.run(query)
         for record in result:
             return jsonify({ 'name': record['name'], 'id': record['id']})
 

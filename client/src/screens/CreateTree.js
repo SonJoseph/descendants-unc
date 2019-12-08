@@ -9,9 +9,10 @@ class CreateTree extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            root_name:'',
-            root_birth:'',
-            root_death:'',
+            name:'',
+            birth:'',
+            death:'',
+            isRoot: this.props.isRoot,
             
             documents:[
                 {
@@ -49,24 +50,26 @@ class CreateTree extends React.Component {
          this.state.documents[idx][key] = val
      }
 
-    // redirect to a new view for new tree
-    createRoot = async () => {
-        //instantiate new root in the database
+    create = async() => {
         let person = {
-            name: this.state.root_name,
-            birth: this.state.root_birth,
-            death: this.state.root_death,
-            documents: this.state.root_documents
+            name: this.state.name,
+            birth: this.state.birth,
+            death: this.state.death,
+            documents: this.state.documents,
         }
-        //let url = '/api/createroot/person='+JSON.stringify(person)
-        let url = '/api/createroot/name='+person.name+'&birth='+person.birth
+        if(this.state.isRoot){
+            person['root'] = 1
+        }
+        let url = '/api/createnodetest/person='+JSON.stringify(person)
         const response = await fetch(url)
         const myJson = await response.json()
-
-        this.props.history.push({
-            pathname: '/update',
-            state: { family: myJson }
-        })
+        
+        if(this.state.isRoot){
+            this.props.history.push({
+                pathname: '/update',
+                state: { family: myJson }
+            })
+        }
     }
 
     render(){
@@ -93,17 +96,12 @@ class CreateTree extends React.Component {
 
                 <h1>Create Tree</h1>
                 <h2>Specify Root Information</h2>
-                <TextField label="Name" name='root_name' onChange={this.updateRootInfo}/>
-                <TextField label="Birth Date" name='root_birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
-                <TextField label="Death Date" name='root_death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
+                <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
 
-                <div>
-
-                >
-                </div>
-
-                <Button onClick={this.createRoot} variant="outlined" color="primary" label="Finish">
-                    Create Tree!
+                <Button onClick={this.create} variant="outlined" color="primary" label="Finish">
+                    Create!
                 </Button>
             </div>
         )

@@ -55,7 +55,7 @@ class SelectTree extends React.Component {
                     {/* <ListItem style={{ width: '100%', marginTop: '30px' }}><Button style={{ width: '100%' }} variant="outlined" color="primary" onClick={() => this.props.history.push('/createClass')}> Add a new class </Button></ListItem> */}
                 </List>
             </div>
-            <CreateTree history={this.props.history} />
+            <CreateTree history={this.props.history} isRoot={true}/>
 
             </SplitPane>
 
