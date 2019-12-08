@@ -9,7 +9,7 @@ function App() {
         <Link to = "/select" >
           <Button  variant="outlined" color="primary" > View A Tree  </Button>
         </Link>
-      
+
 	</div>
 }
 

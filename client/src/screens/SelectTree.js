@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import SplitPane from 'react-split-pane'
 import TextField from '@material-ui/core/TextField'
 import CreateNode from '../components/CreateNode'
+import CreatePopup from '../components/CreatePopup'
 
 class SelectTree extends React.Component {
     /*
@@ -42,6 +43,7 @@ class SelectTree extends React.Component {
           <SplitPane split='horizontal' defaultSize={200}>
           <div>
             <h1>The Descendants Project</h1>
+            <CreatePopup  />
           </div>
 
           <SplitPane split="vertical" defaultSize={700}>

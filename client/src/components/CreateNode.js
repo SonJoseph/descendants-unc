@@ -14,7 +14,7 @@ class CreateNode extends React.Component {
             birth:'',
             death:'',
             isRoot: this.props.isRoot,
-            
+
             documents:[
                 {
                     name : '',
@@ -24,6 +24,7 @@ class CreateNode extends React.Component {
 
             relnType:''
         }
+        console.log("ISROOT IS " + this.state.isRoot)
     }
 
     updateRootInfo = (event) => {
@@ -70,7 +71,7 @@ class CreateNode extends React.Component {
         let url = '/api/createnode/person='+JSON.stringify(person)
         let response = await fetch(url)
         let myJson = await response.json()
-        
+
         if(this.state.isRoot){
             this.props.history.push({
                 pathname: '/update',
@@ -99,7 +100,7 @@ class CreateNode extends React.Component {
 
         for(let i=0; i<this.state.documents.length; i++){
             console.log(this.state.documents[i].name + " : " + this.state.documents[i].link)
-            Documents.push(<Document 
+            Documents.push(<Document
                 idx = {i}
                 initName = {this.state.documents[i].name}
                 initLink = {this.state.documents[i].link}
@@ -116,14 +117,14 @@ class CreateNode extends React.Component {
                 {Documents}
                 <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
                 <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
-                
-                {
-                    !this.state.isRoot && <CreateRelationship 
-                        updateRelnForm = {this.updateRelnForm}
-                        selectedName = {this.props.selectedJson['name']}
-                        name = {this.state.name}
-                    />
-                }
+                  {
+                      !this.state.isRoot && <CreateRelationship
+                          updateRelnForm = {this.updateRelnForm}
+                          selectedName = {this.props.selectedJson['name']}
+                          name = {this.state.name}
+                      />
+                  }
+
                 <Button onClick={this.create} variant="outlined" color="primary" label="Finish">
                     Create!
                 </Button>
