@@ -15,6 +15,7 @@ class SelectTree extends React.Component {
         this.state = {
             tree_roots : [],
         }
+        this.name = this.props.selectedJson
     }
 
     getTreeRoots = async () => {

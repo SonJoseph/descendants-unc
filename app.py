@@ -34,7 +34,7 @@ def updateNode(person):
         for prop in person.items():
             print(prop)
             if prop[0] == "id":
-                p_id = prop[1]            
+                p_id = prop[1]
             elif type(prop[1]) is int:
                 fields += "n.{} = {}, ".format(prop[0], prop[1])
             else:
@@ -116,7 +116,6 @@ def createRelationship(newId, relnId, relnType, spouseId): #relnId is the id of 
 
 @app.route('/api/deletenode/id=<id>')
 def deleteNode(id):
-    print("Function at least executes")
     global driver
     with driver.session() as session:
         children = session.run("MATCH (Person { id: '"+ id +"' })-[:parent]->(person) RETURN person.name as name, person.id as id")
@@ -174,7 +173,7 @@ visited = set() # set
 def getTree(id):
     global driver
     global visited
-    
+
     members = []
     visited = set() # clear this for every new request
     with driver.session() as session:
