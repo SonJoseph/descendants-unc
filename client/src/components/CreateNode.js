@@ -2,6 +2,10 @@ import React from 'react'
 import { Route , withRouter} from 'react-router-dom';
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
+import InputLabel from '@material-ui/core/InputLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl';
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
@@ -12,8 +16,10 @@ class CreateNode extends React.Component {
         super(props)
         this.state = {
             name:'',
+            gender:'',
             birth:'',
             death:'',
+            moreinfo:'',
             isRoot: this.props.isRoot,
 
             documents:[
@@ -62,9 +68,11 @@ class CreateNode extends React.Component {
     create = async() => {
         let person = {
             name: this.state.name,
+            gender: this.state.gender,
             birth: this.state.birth,
             death: this.state.death,
             documents: this.state.documents,
+            moreinfo: this.state.moreinfo
         }
         if(this.state.isRoot){
             person['root'] = 1
@@ -113,8 +121,22 @@ class CreateNode extends React.Component {
         return(
             <div>
                 <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
+
+                <InputLabel id="demo-mutiple-name-label">Gender</InputLabel>
+                <Select
+                    name="gender"
+                    onChange={this.updateRootInfo}
+                    value={this.state.gender}
+                >
+                    <MenuItem value={'female'}>Female</MenuItem>
+                    <MenuItem value={'male'}>Male</MenuItem>
+                    <MenuItem value={'non-binary'}>NonBinary</MenuItem>
+                    <MenuItem value={'unknown'}>Unknown</MenuItem>
+                </Select>
+
                 <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
                 <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
+                <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="4" defaultValue="Add here..." variant="outlined" onChange={this.updateRootInfo}/>
                 {Documents}
                 <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
                 <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
