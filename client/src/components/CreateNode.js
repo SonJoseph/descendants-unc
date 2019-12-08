@@ -1,4 +1,5 @@
 import React from 'react'
+import { Route , withRouter} from 'react-router-dom';
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
@@ -138,4 +139,4 @@ class CreateNode extends React.Component {
 
 }
 
-export default CreateNode
+export default withRouter(CreateNode);
