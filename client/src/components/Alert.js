@@ -13,7 +13,7 @@ class Alert extends React.Component {
         <Popup trigger={<Button> Delete </Button>} position="right center" modal>
           {close => (
               <div>
-                <h1> Are you sure you want to delete {this.props.selectedID} from the tree? </h1>
+                <h1> Are you sure you want to delete this person from the tree? </h1>
                 This will delete any people directly below this person in the tree, their spouse, and the data for all of those people.
                 <div className="actions">
                   <Button className="button" onClick={() => { close(); }}> Cancel </Button>
