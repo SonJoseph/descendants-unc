@@ -2,6 +2,7 @@ import React from 'react'
 import { Route , withRouter} from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button'
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import TextField from '@material-ui/core/TextField'
 import InputLabel from '@material-ui/core/InputLabel'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -181,15 +182,17 @@ class CreateNode extends React.Component {
                       </Grid>
 
                       <Grid item style={{ margin: 8 }}>
-                        <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
-                        <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
-                          {
-                              !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
-                                  updateRelnForm = {this.updateRelnForm}
-                                  selectedName = {this.props.selectedJson['name']}
-                                  name = {this.state.name}
-                              />
-                          }
+                        <ButtonGroup size="small" aria-label="small outlined button group" color="primary">
+                          <Button onClick={this.addDocument} variant="contained">Add New Doc</Button>
+                          <Button onClick={this.deleteLastDocument}> Delete Last Doc </Button>
+                            {
+                                !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
+                                    updateRelnForm = {this.updateRelnForm}
+                                    selectedName = {this.props.selectedJson['name']}
+                                    name = {this.state.name}
+                                />
+                            }
+                        </ButtonGroup>
                       </Grid>
                     </Grid>
                   </Grid>

@@ -1,6 +1,7 @@
 import React from "react";
 import Popup from "reactjs-popup";
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid';
 
 class Alert extends React.Component {
 
@@ -10,7 +11,7 @@ class Alert extends React.Component {
 
     render(){
       return(
-        <Popup trigger={<Button> Delete </Button>} position="right center" modal>
+        <Popup trigger={<Grid container justify="center" alignItems="center"><Grid item><Button variant="contained" color="red" size="large"> Delete </Button></Grid></Grid>} position="right center" modal>
           {close => (
               <div>
                 <h1> Are you sure you want to delete this person from the tree? </h1>

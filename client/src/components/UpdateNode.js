@@ -34,8 +34,8 @@ class UpdateNode extends React.Component {
         return(
             <div>
                 <div> Edit </div>
-                <CreateNode 
-                    selectedJson = {this.props.selectedJson} 
+                <CreateNode
+                    selectedJson = {this.props.selectedJson}
                     isRoot = {false}
                     isUpdate = {true}
                     updateNode = {this.submitUpdates}
