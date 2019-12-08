@@ -94,8 +94,11 @@ def createRelationship(newId, relnId, relnType, spouseId): #relnId is the id of 
             print("HELLO")
             uid2 = uuid.uuid4().urn
             id2 = uid2[9:]
+
             # create new person for the undefined spouse
-            naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"'}) RETURN n.id as id")
+            naSpouse = session.run("CREATE (n:Person { name: 'unknown' , id: '"+id2+"', documents:'[]', "+
+            "birth:'', death:'', gender:'', moreinfo:''}) RETURN n.id as id")
+
             # create spousal relationship between undefined spouse and relnId
             createSpouseReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + relnId +
             "' AND b.id = '" + naSpouse.peek()['id'] +

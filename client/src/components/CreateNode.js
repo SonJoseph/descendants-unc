@@ -142,7 +142,9 @@ class CreateNode extends React.Component {
                 <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
                 <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" 
                 multiline rows="4" defaultValue="Add here..." variant="outlined" onChange={this.updateRootInfo} defaultValue={this.state.moreinfo}/>
+
                 {Documents}
+                
                 <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
                 <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
                 { /* create relationship option when we aren't creating a new root or updating */

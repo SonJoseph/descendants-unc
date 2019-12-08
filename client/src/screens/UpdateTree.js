@@ -90,6 +90,8 @@ class UpdateTree extends React.Component {
         const response = await fetch('/api/getnode/id=' + id)
         const json = await response.json()
 
+        console.log(json)
+
         let arr = []
 
         json['documents'] = JSON.parse(json['documents'].replace(/\n|\r/g,'').replace(/'/g, '"'))
