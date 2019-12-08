@@ -38,14 +38,24 @@ def updateNode(person):
             elif type(prop[1]) is int:
                 fields += "n.{} = {}, ".format(prop[0], prop[1])
             else:
-                fields += "n.{} = '{}', ".format(prop[0], prop[1])
+                fields += 'n.{} = "{}", '.format(prop[0], prop[1])
         fields=fields[:-2]
         query = "MATCH (n {{ id: '{}' }}) SET {} RETURN n".format(p_id, fields) # To insert a literal bracket, double-bracket
         result = session.run("MATCH (n { id: " + "'" + p_id + "'" + " }) SET " + fields + " RETURN n")
         return jsonify("node information updated!")
 
-@app.route('/api/createnodetest/person=<person>')
-def createNodeTest(person):
+@app.route('/api/getspouseid/nodeid=<nodeid>')
+def getSpouseId(nodeid):
+    global driver
+    with driver.session() as session:
+        result = session.run("MATCH (n:Person {id: " + "'" + nodeid + "'" + "})-[:spouse]-(target:Person) RETURN target.id AS spouseId")
+        if (result.peek() is None):
+            return jsonify("None")
+        else:
+            return jsonify({'spouseId': result.single()['spouseId']})
+
+@app.route('/api/createnode/person=<person>')
+def createNode(person):
     global driver
 
     uid = uuid.uuid4().urn
@@ -68,25 +78,12 @@ def createNodeTest(person):
         for record in result:
             return jsonify({ 'name': record['name'], 'id': record['id']})
 
-
-@app.route('/api/getspouseid/nodeid=<nodeid>')
-def getSpouseId(nodeid):
+@app.route('/api/createrelationship/newId=<newId>&relnId=<relnId>&relnType=<relnType>&spouseId=<spouseId>')
+def createRelationship(newId, relnId, relnType, spouseId): #relnId is the id of the selected node
     global driver
+    
+    id = newId # ID of the created node
     with driver.session() as session:
-        result = session.run("MATCH (n:Person {id: " + "'" + nodeid + "'" + "})-[:spouse]-(target:Person) RETURN target.id AS spouseId")
-        if (result.peek() is None):
-            return jsonify("None")
-        else:
-            return jsonify({'spouseId': result.single()['spouseId']})
-
-@app.route('/api/createnode/name=<name>&relnId=<relnId>&relnType=<relnType>&spouseId=<spouseId>')
-def createNode(name, relnId, relnType, spouseId):
-    global driver
-    uid = uuid.uuid4().urn
-    id = uid[9:]
-    with driver.session() as session:
-        print(spouseId)
-        createPerson = session.run("CREATE (n:Person { name: '"+name+"' , id: '"+id+"'}) RETURN n.name AS name, n.id as id")
         createReln = session.run("MATCH (a:Person),(b:Person) WHERE a.id = '" + id +
         "' AND b.id = '" + relnId +
         "' CREATE (b)-[r:"+relnType+"]->(a) RETURN type(r)")

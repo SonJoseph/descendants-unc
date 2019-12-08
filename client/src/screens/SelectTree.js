@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
 import SplitPane from 'react-split-pane'
 import TextField from '@material-ui/core/TextField'
-import CreateTree from './CreateTree'
+import CreateNode from '../components/CreateNode'
 
 class SelectTree extends React.Component {
     /*
@@ -55,7 +55,7 @@ class SelectTree extends React.Component {
                     {/* <ListItem style={{ width: '100%', marginTop: '30px' }}><Button style={{ width: '100%' }} variant="outlined" color="primary" onClick={() => this.props.history.push('/createClass')}> Add a new class </Button></ListItem> */}
                 </List>
             </div>
-            <CreateTree history={this.props.history} isRoot={true}/>
+            <CreateNode history={this.props.history} isRoot={true}/>
 
             </SplitPane>
 

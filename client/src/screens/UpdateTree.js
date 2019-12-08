@@ -139,6 +139,7 @@ class UpdateTree extends React.Component {
                             <div>
                                 {<Form
                                     {...this.state} // parent's state can be accesed in child via this.props...
+                                    isRoot={false}
                                     edit={this.edit.bind(this)}
                                     back={this.back.bind(this)}
                                     add={this.add.bind(this)}

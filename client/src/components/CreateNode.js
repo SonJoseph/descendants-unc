@@ -2,9 +2,10 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 
-import Document from '../components/Document'
+import Document from './Document'
+import CreateRelationship from './CreateRelationship'
 
-class CreateTree extends React.Component {
+class CreateNode extends React.Component {
 
     constructor(props){
         super(props)
@@ -19,7 +20,9 @@ class CreateTree extends React.Component {
                     name : '',
                     link : ''
                 }
-            ] 
+            ],
+
+            relnType:''
         }
     }
 
@@ -47,7 +50,11 @@ class CreateTree extends React.Component {
      }
 
      updateDocument = (idx, key, val) => {
-         this.state.documents[idx][key] = val
+        this.state.documents[idx][key] = val
+     }
+
+     updateRelnForm = (val) =>{
+        this.state.relnType = val
      }
 
     create = async() => {
@@ -60,18 +67,33 @@ class CreateTree extends React.Component {
         if(this.state.isRoot){
             person['root'] = 1
         }
-        let url = '/api/createnodetest/person='+JSON.stringify(person)
-        const response = await fetch(url)
-        const myJson = await response.json()
+        let url = '/api/createnode/person='+JSON.stringify(person)
+        let response = await fetch(url)
+        let myJson = await response.json()
         
         if(this.state.isRoot){
             this.props.history.push({
                 pathname: '/update',
                 state: { family: myJson }
             })
+        }else{
+            /*
+                Create the specified relationship to the newly created node
+            */
+
+            // get spouse id
+            const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
+            const json_spouse = await response_spouse.json()
+            let spouse_id = json_spouse['spouseId']
+
+            url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+            const response = await fetch(url)
+            myJson = await response.json()
+
+            this.props.refreshTree() // go back to 'view node' in lhs of UpdateTree
+            this.props.back()
         }
     }
-
     render(){
         const Documents = []
 
@@ -86,27 +108,33 @@ class CreateTree extends React.Component {
             />)
         }
 
-
         return(
             <div>
-                {Documents}
-
-                <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
-                <Button onClick={this.deleteLastDocument}> Delte Last Document </Button>
-
-                <h1>Create Tree</h1>
-                <h2>Specify Root Information</h2>
                 <TextField label="Name" name='name' onChange={this.updateRootInfo}/>
                 <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
                 <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo}/>
-
+                {Documents}
+                <Button onClick={this.addDocument} variant="outlined" color="primary">Add New Document</Button>
+                <Button onClick={this.deleteLastDocument}> Delete Last Document </Button>
+                
+                {
+                    !this.state.isRoot && <CreateRelationship 
+                        updateRelnForm = {this.updateRelnForm}
+                        selectedName = {this.props.selectedJson['name']}
+                        name = {this.state.name}
+                    />
+                }
                 <Button onClick={this.create} variant="outlined" color="primary" label="Finish">
                     Create!
                 </Button>
+                {
+                    !this.state.isRoot &&
+                    <Button onClick={this.props.back}> Back </Button>
+                }
             </div>
         )
     }
 
 }
 
-export default CreateTree
+export default CreateNode

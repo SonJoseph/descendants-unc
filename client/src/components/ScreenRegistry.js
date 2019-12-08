@@ -1,11 +1,11 @@
 import ViewNode from '../components/ViewNode.js'
 import UpdateNode from '../components/UpdateNode.js'
-import AddNode from '../components/AddNode.js'
+import CreateNode from '../components/CreateNode.js'
 
 const ScreenRegistry = {
     'view' : ViewNode,
     'update' : UpdateNode,
-    'add' : AddNode
+    'add' : CreateNode
 }
 
 export default ScreenRegistry
