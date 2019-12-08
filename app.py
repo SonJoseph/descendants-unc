@@ -131,7 +131,6 @@ def getNode(id): # MATCH (n:Person { name: 'Alex' }) RETURN n
     clientObj = {}
     with driver.session() as session:
         result = session.run('MATCH (n:Person { id: "' + id + '" }) RETURN n')
-        # How do we return all the properties as a json object?
         for record in result:
             properties = record['n'].items()
             for key, val in properties:

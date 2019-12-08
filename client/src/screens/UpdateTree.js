@@ -84,7 +84,6 @@ class UpdateTree extends React.Component {
 
     chooseNode = (name, extra, id) => {
         this.getNode(extra)
-
    }
 
    getNode = async (id) => {
@@ -115,11 +114,19 @@ class UpdateTree extends React.Component {
        })
    }
 
-   back = () => {
-       this.getNode(this.state.selectedID) // update info related to selected node in case there were a change
-       this.setState({
-           display : 'view'
-       })
+   back = (del) => {
+       if(del){
+            this.setState({
+                selectedArr : [], 
+                selectedID : '', 
+                selectedJson : {},
+            })
+        }else{
+            this.getNode(this.state.selectedID) // update info related to selected node in case there were a change
+        }
+        this.setState({
+            display : 'view'
+        })
    }
 
    add = () => {
