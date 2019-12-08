@@ -19,11 +19,9 @@ class CreatePopup extends React.Component {
               <div>
                 <h1> Add your first person to the family tree! </h1>
                 <p> Your family tree will be idenitifed by this person. You can change this later. </p>
-                <CreateNode {...this.state}/>
-                <div className="actions">
-                  <Button className="button" onClick={() => { close(); }}> Cancel </Button>
-                  <Button className="button" onClick={() => {  }}> Confirm </Button>
-                </div>
+                <CreateNode {...this.state}
+                  close={close.bind(this)}
+                  />
               </div>
           )}
         </Popup>

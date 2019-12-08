@@ -131,7 +131,11 @@ class CreateNode extends React.Component {
                 </Button>
                 {
                     !this.state.isRoot &&
-                    <Button onClick={this.props.back}> Back </Button>
+                    <Button onClick={this.props.back}> Cancel </Button>
+                }
+                {
+                    this.state.isRoot &&
+                    <Button onClick={this.props.close}> Cancel </Button>
                 }
             </div>
         )
