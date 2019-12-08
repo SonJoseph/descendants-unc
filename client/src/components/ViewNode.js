@@ -1,6 +1,7 @@
 import React from 'react'
 import Button from '@material-ui/core/Button'
 import { List, ListItem, ListItemText } from '@material-ui/core'
+import Property from '../components/Property'
 
 class ViewNode extends React.Component {
 
@@ -8,21 +9,27 @@ class ViewNode extends React.Component {
         super(props)
     }
 
-
     render(){
+        const Display = []
+
+        for(let i=0; i<this.props.selectedArr.length; i++){
+            let key = this.props.selectedArr[i][0]
+            let val = this.props.selectedArr[i][1]
+
+            Display.push(
+                <Property 
+                    k = {key}
+                    val = {val}
+                />
+            )
+        }
+
         return(
             <div>
-                <div>View</div>
+                <h1>View</h1>
                 <List id="viewNodeInfo">
                     {
-                        this.props.selectedArr.map(
-                            (item) =>
-                                <ListItem>
-                                    <ListItemText>
-                                        {item[0] + ': ' + item[1]}
-                                    </ListItemText>
-                                </ListItem>
-                        )
+                        Display
                     }
                 </List>
                 <Button onClick={this.props.edit}> Edit </Button>

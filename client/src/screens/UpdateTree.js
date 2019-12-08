@@ -88,24 +88,26 @@ class UpdateTree extends React.Component {
    }
 
    getNode = async (id) => {
-           const response = await fetch('/api/getnode/id=' + id)
-           const json = await response.json()
+        const response = await fetch('/api/getnode/id=' + id)
+        const json = await response.json()
 
-           console.log(json)
+        let arr = []
 
-           let arr = []
-           Object.entries(json).forEach(([key,value])=>{
-                if(key !== "id" && key !== "root" && key !== "depth"){
-                    // Don't display these fields. If they're not displayed, then they also can't be edited
-                    arr.push([key, value])
-                }
-           })
-           this.setState({
-               selectedArr : arr, // we display this
-               selectedID : id, 
-               selectedJson : json, // we use this to update fields
-           })
-       }
+        json['documents'] = JSON.parse(json['documents'].replace(/\n|\r/g,'').replace(/'/g, '"'))
+
+        Object.entries(json).forEach(([key,value])=>{
+            if(key !== "id" && key !== "root" && key !== "depth"){
+                // Don't display these fields. If they're not displayed, then they also can't be edited
+                arr.push([key, value])
+            }
+        })
+        
+        this.setState({
+            selectedArr : arr, // we display this
+            selectedID : id, 
+            selectedJson : json, // we use this to update fields
+        })
+    }
 
    edit = () => {
        this.setState({
