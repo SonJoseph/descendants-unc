@@ -78,7 +78,7 @@ class CreateNode extends React.Component {
             moreinfo: this.state.moreinfo
         }
         if(!this.props.isUpdate){
-          newRootWithReln = this.state.relnType === 'child';
+          let newRootWithReln = this.state.relnType === 'child';
             if(this.state.isRoot || newRootWithReln){ 
               /* 
                 We are creating a new tree from scratch
@@ -95,7 +95,7 @@ class CreateNode extends React.Component {
                 /*
                     Create the specified relationship to the newly created node
                 */
-                let spouse_id = null
+                let spouse_id = 'undefined'
                 if(!newRootWithReln){
                   const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
                   const json_spouse = await response_spouse.json()
@@ -105,7 +105,7 @@ class CreateNode extends React.Component {
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
 
-                  this.props.refreshTree() // go back to 'view node' in lhs of UpdateTree
+                  this.props.refreshTree()
                   this.props.back(false)
                   return
                 }else{
@@ -113,12 +113,15 @@ class CreateNode extends React.Component {
                   url = '/api/createrelationship/newId='+this.props.selectedID+'&relnId='+myJson['id']+'&relnType=parent&spouseId='+spouse_id
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
+                  this.props.changeRoot(myJson['id'])
+                  this.props.back(false)
                 }
+            }else{
+              this.props.history.push({
+                pathname: '/update',
+                state: { family: myJson }
+              })
             }
-            this.props.history.push({
-              pathname: '/update',
-              state: { family: myJson }
-            })
         }else{
             person['id'] = this.props.selectedJson['id']
             this.props.updateNode(person)
