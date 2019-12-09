@@ -102,10 +102,10 @@ class UpdateTree extends React.Component {
                 arr.push([key, value])
             }
         })
-        
+
         this.setState({
             selectedArr : arr, // we display this
-            selectedID : id, 
+            selectedID : id,
             selectedJson : json, // we use this to update fields
         })
     }
@@ -119,8 +119,8 @@ class UpdateTree extends React.Component {
    back = (del) => {
        if(del){
             this.setState({
-                selectedArr : [], 
-                selectedID : '', 
+                selectedArr : [],
+                selectedID : '',
                 selectedJson : {},
             })
         }else{
@@ -145,7 +145,7 @@ class UpdateTree extends React.Component {
         return (
             <Container>
 
-                <SplitPane split="vertical" defaultSize={350}>
+                <SplitPane split="vertical" defaultSize={400}>
 
                             <div>
                                 {<Form

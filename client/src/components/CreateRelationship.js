@@ -28,14 +28,14 @@ class CreateRelationship extends React.Component {
 
         return (
             <div>
-                    <InputLabel >What is {this.props.selectedName}'s relationship to {this.props.name} </InputLabel>
+                    <h2 >What is {this.props.name}'s relationship to {this.props.selectedName}? </h2>
                     <Select
                         name="relnType"
                         onChange={this.update}
                         value={this.state.reln}
                     >
                         <MenuItem value={'spouse'}>Spouse</MenuItem>
-                        <MenuItem value={'parent'}>Parent</MenuItem>
+                        <MenuItem value={'parent'}>Child</MenuItem>
                     </Select>
             </div>
 

@@ -127,7 +127,10 @@ class CreateNode extends React.Component {
 
         return(
             <div>
+
                 <Grid container spacing={2} direction="column" justify="center" alignItems="center">
+                  {this.props.isUpdate && <h2>Editing {this.state.name}</h2>}
+                  {!this.props.isUpdate && !this.props.isRoot && <h2>Adding Relative to {this.props.selectedJson['name']}</h2>}
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
 
@@ -185,6 +188,10 @@ class CreateNode extends React.Component {
                         <ButtonGroup size="small" aria-label="small outlined button group" color="primary">
                           <Button onClick={this.addDocument} variant="contained">Add New Doc</Button>
                           <Button onClick={this.deleteLastDocument}> Delete Last Doc </Button>
+                          </ButtonGroup>
+                      </Grid>
+
+                      <Grid item style = {{margin: 8}}>
                             {
                                 !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
                                     updateRelnForm = {this.updateRelnForm}
@@ -192,8 +199,8 @@ class CreateNode extends React.Component {
                                     name = {this.state.name}
                                 />
                             }
-                        </ButtonGroup>
                       </Grid>
+
                     </Grid>
                   </Grid>
 
