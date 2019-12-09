@@ -9,12 +9,7 @@ from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, static_folder='client/build')
 socketio = SocketIO(app, cors_allowed_origins="*")
-driver = {}
-
-
-def connect(): # this is called when the app is created
-    global driver
-    driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
+driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
 
 @socketio.on('FetchTree')
 def fetchTree(json):
@@ -231,7 +226,6 @@ def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the roo
     return member
 
 if __name__ == '__main__':
-    connect()
     #app.run(use_reloader=True, port=5000)
     socketio.run(app, debug=True, port=5000)
 
