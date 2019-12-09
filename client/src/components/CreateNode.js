@@ -9,11 +9,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
-<<<<<<< HEAD
 import FormHelperText from '@material-ui/core/FormHelperText';
-=======
 import { Typography } from '@material-ui/core';
->>>>>>> eea447278909ee1b76233e37a766555aa095d5bf
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
