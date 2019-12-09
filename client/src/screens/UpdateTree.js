@@ -171,13 +171,13 @@ class UpdateTree extends React.Component {
                             </div>
                             <Grid container spacing={3} justify= 'center' direction="column" >
                                 <Grid item>
-                                  <Container maxWidth='md'>
+                                  <Container maxWidth='lg' style={{marginTop: '10px', marginBottom: '10px'}}>
                                     <Typography variant='h3'> {this.state.root_name}'s Family </Typography>
                                   </Container >
                                 </Grid >
-                                <Container maxWidth='md'>
+                                <Container maxWidth='lg'>
                                   <div>
-                                    <svg ref="tree" id = "graph" viewBox="0,0,800,800" width="100%" heightx="100%"></svg>
+                                    <svg ref="tree" id = "graph" width="100%" height="560" style={{borderWidth: "0px"}}></svg>
                                   </div>
                                 </Container >
                             </Grid>
