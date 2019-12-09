@@ -4,13 +4,13 @@ from flask import Flask, send_from_directory
 from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
 import json
-from credentials import url, user, password
+#from credentials import url, user, password
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, static_folder='client/build')
 socketio = SocketIO(app, cors_allowed_origins="*")
-driver = GraphDatabase.driver(url, auth=basic_auth(user, password))
-#driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
+#driver = GraphDatabase.driver(url, auth=basic_auth(user, password))
+driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
 
 @socketio.on('FetchTree')
 def fetchTree(json):
@@ -227,7 +227,7 @@ def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the roo
 
 if __name__ == '__main__':
     #app.run(use_reloader=True, port=5000)
-    socketio.run(app, debug=True, port=5000)
+    socketio.run(app, debug=True)#, port=5000)
 
 '''
 CREATE (al:Person { name: "Alex", birth: "05301998", depth: 0, root: 1}),

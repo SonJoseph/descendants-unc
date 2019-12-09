@@ -30,7 +30,7 @@ class UpdateTree extends React.Component {
 
         this.state = {
             session : cookies.get('SESSION_ID'),
-            socket: openSocket(ws_scheme + window.location.hostname + ':5000'),
+            socket: openSocket(ws_scheme + window.location.hostname),// + ':5000'),
             display : 'home',
 
             root_name : props.location.state.family.name,
