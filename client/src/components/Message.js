@@ -12,7 +12,7 @@ class Message extends React.Component {
     render(){
         return(
               <Grid style = {{margin:15}}>
-                <Typography variant="h5">
+                <Typography variant="h4" style={{color: "#4253B8", textAlign: "center", marginTop: "5px"}}>
                     {this.props.message}
                 </Typography>
               </Grid>

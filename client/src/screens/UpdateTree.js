@@ -155,7 +155,7 @@ class UpdateTree extends React.Component {
 
         return (
 
-                <SplitPane split="vertical" minSize={410} defaultSize={410}>
+                <SplitPane split="vertical" minSize={410} defaultSize={410} maxSize={410}>
 
                             <div style={{maxHeight: '100%', overflow: 'auto'}}>
                                 {<Form
@@ -172,12 +172,12 @@ class UpdateTree extends React.Component {
                             <Grid container spacing={3} justify= 'center' direction="column" >
                                 <Grid item>
                                   <Container maxWidth='lg' style={{marginTop: '10px', marginBottom: '10px'}}>
-                                    <Typography variant='h3'> {this.state.root_name}'s Family </Typography>
+                                    <Typography variant='h2'style={{textAlign: "center", marginTop: '10px'}}> {this.state.root_name}'s Family </Typography>
                                   </Container >
                                 </Grid >
                                 <Container maxWidth='lg'>
                                   <div>
-                                    <svg ref="tree" id = "graph" width="100%" height="560" style={{borderWidth: "0px"}}></svg>
+                                    <svg ref="tree" id = "graph" width="100%" height="560" style={{ borderWidth: "0px"}}></svg>
                                   </div>
                                 </Container >
                             </Grid>

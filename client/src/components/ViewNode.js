@@ -33,7 +33,7 @@ class ViewNode extends React.Component {
         return(
             <Grid direction="column" container style = {{margin:15}}>
                 <Grid item>
-                  <Typography variant='h4'>Viewing {this.props.selectedJson['name']}</Typography>
+                  <Typography variant='h4' style={{color: "#4253B8", textAlign: "center", marginTop: "5px"}}>Viewing {this.props.selectedJson['name']}</Typography>
                   <List id="viewNodeInfo">
                       {
                           Display

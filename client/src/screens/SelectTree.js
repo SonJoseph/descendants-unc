@@ -55,9 +55,9 @@ class SelectTree extends React.Component {
                 <Container maxWidth="sm">
                   <Grid container spacing={3} justify= 'center'>
                     <Grid item>
-                      <Typography variant='h5'> Select Existing Tree </Typography>
+                      <Typography variant='h5'> Click to View an Existing Tree.</Typography>
                     </Grid>
-                    <Grid item container spacing={1} justify="center" alignItems="center" style={{height:400, overflow: 'auto',  borderStyle: 'solid', borderWidth: '0.5px'}}>
+                    <Grid item container spacing={1} justify="center" alignItems="center" style={{height:400, overflow: 'auto'}}>
                         {
                             this.state.tree_roots.map(
                                 (item) => <Grid item> <Button color="secondary" onClick={() => this.updateTree(item)}  variant="outlined" color="primary" > {item.name} </Button> </Grid>
