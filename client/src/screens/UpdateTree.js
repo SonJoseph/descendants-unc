@@ -84,6 +84,9 @@ class UpdateTree extends React.Component {
 
     chooseNode = (name, extra, id) => {
         this.getNode(extra)
+        this.setState({
+            display : 'view'
+        })
    }
 
    getNode = async (id) => {
@@ -109,10 +112,8 @@ class UpdateTree extends React.Component {
     }
 
     changeRoot = (id) => {
-        console.log('hello')
-        this.state.root_id = id
-        this.state.selectedID = id // display the new root's information. This is done in 'back'
-        this.getTree() // update the tree to display the new root
+        this.state.root_id = id // set a new root id
+        this.back(false, id)
     }
 
    edit = () => {
@@ -121,15 +122,19 @@ class UpdateTree extends React.Component {
        })
    }
 
-   back = (del) => {
-       if(del){
+   back = (del=false, id=this.state.selectedID) => {
+       console.log(del)
+       if(del == true){
+           console.log('hm')
             this.setState({
                 selectedArr : [],
                 selectedID : '',
                 selectedJson : {},
             })
         }else{
-            this.getNode(this.state.selectedID) // update info related to selected node in case there were a change
+            console.log('hi')
+            this.getNode(id) // view the specified node
+            this.getTree() // refresh node
         }
         this.setState({
             display : 'view'
@@ -159,7 +164,7 @@ class UpdateTree extends React.Component {
                                     edit={this.edit.bind(this)}
                                     back={this.back.bind(this)}
                                     add={this.add.bind(this)}
-                                    refreshTree={this.getTree.bind(this)}
+
                                     changeRoot={this.changeRoot.bind(this)}
                                 />}
                             </div>
