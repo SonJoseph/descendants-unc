@@ -14,12 +14,23 @@ window.d3 = d3;
 
 class UpdateTree extends React.Component {
 
+
     constructor(props){
         super(props)
         const cookies = new Cookies()
+
+        if(window.location.protocol === "https:") {
+            var ws_scheme = "wss://";
+        } else {
+            var ws_scheme = "ws://"
+        };
+
+        console.log(ws_scheme + window.location.hostname)
+
+
         this.state = {
             session : cookies.get('SESSION_ID'),
-            socket: openSocket('http://localhost:5000'),
+            socket: openSocket(ws_scheme + window.location.hostname),
             display : 'home',
 
             root_name : props.location.state.family.name,
