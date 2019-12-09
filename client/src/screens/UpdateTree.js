@@ -44,18 +44,20 @@ class UpdateTree extends React.Component {
         }
 
         this.state.socket.on('RefreshTree', data =>{
-            if(data['tree_id'] === this.state.root_id && this.state.session != data['session']){
+            if(data['tree_id'] === this.state.root_id && this.state.session !== data['session']){
                 console.log('Another client is working on this tree')
-                this.getTree()
+                this.getTree(false) // Don't send message to server or-else infinite loop!
             }
         })
     }
 
-    getTree = async () => { // We currently can't change the root of the tree
-        this.state.socket.emit('FetchTree', {
-            'session' : this.state.session,
-            'tree_id' : this.state.root_id
-        })
+    getTree = async (sendMsg=true) => { // We currently can't change the root of the tree
+        if(sendMsg == true){
+            this.state.socket.emit('FetchTree', {
+                'session' : this.state.session,
+                'tree_id' : this.state.root_id
+            })
+        }
         const response = await fetch('/api/gettree/id='+ this.state.root_id)
         const myJson = await response.json()
         this.setState({

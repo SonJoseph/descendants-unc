@@ -9,11 +9,11 @@ from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, static_folder='client/build')
 socketio = SocketIO(app, cors_allowed_origins="*")
+#driver = GraphDatabase.driver(url, auth=basic_auth(user, password))
 driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
 
 @socketio.on('FetchTree')
 def fetchTree(json):
-    print(json['session'])
     emit('RefreshTree', {'tree_id': json['tree_id'], 'session': json['session']}, broadcast=True, include_self=False)
     # Tell all users besides the sender to re-fetch the tree with id
 
@@ -227,7 +227,7 @@ def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the roo
 
 if __name__ == '__main__':
     #app.run(use_reloader=True, port=5000)
-    socketio.run(app, debug=True, port=5000)
+    socketio.run(app, debug=True)#, port=5000)
 
 '''
 CREATE (al:Person { name: "Alex", birth: "05301998", depth: 0, root: 1}),
