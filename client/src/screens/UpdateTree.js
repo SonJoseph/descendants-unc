@@ -184,7 +184,7 @@ class UpdateTree extends React.Component {
                             <Grid container spacing={3} justify= 'center' direction="column" >
                                 <Grid item>
                                   <Container maxWidth='lg' style={{marginTop: '10px', marginBottom: '10px'}}>
-                                    <Grid container spacing={3} justify= 'space-between' direction="row" >
+                                    <Grid container spacing={3} justify= 'space-between' alignItems='center' direction="row" >
                                       <Grid item>
                                         <Typography variant='h2'style={{textAlign: "center", marginTop: '10px'}}> {this.state.root_name}'s Family </Typography>
                                       </Grid>
