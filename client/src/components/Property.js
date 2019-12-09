@@ -17,14 +17,14 @@ class Property extends React.Component {
     render() {
         let Display = this.props.k + ' : ' + this.props.val // this.props.val is an array
         if(this.props.k === 'documents'){
-            
+
             Display = []
             for(let i=0; i<this.props.val.length; i++){
                 let key = this.props.val[i]['name']
                 let val = this.props.val[i]['link']
 
                 Display.push(
-                    <ViewDocument 
+                    <ViewDocument
                         k = {key}
                         val = {val}
                     />
@@ -43,7 +43,7 @@ class Property extends React.Component {
                 </ListItemText>
             </ListItem>
         )
-    }   
+    }
 }
 
 export default Property
