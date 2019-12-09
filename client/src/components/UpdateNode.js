@@ -25,7 +25,6 @@ class UpdateNode extends React.Component {
       let url = '/api/deletenode/id='+this.props.selectedID;
       const response = await fetch(url)
       const myJson = await response.json()
-      this.props.refreshTree()
       this.props.back(true)
     }
 

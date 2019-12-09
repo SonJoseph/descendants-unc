@@ -125,17 +125,15 @@ class UpdateTree extends React.Component {
    back = (del=false, id=this.state.selectedID) => {
        console.log(del)
        if(del == true){
-           console.log('hm')
             this.setState({
                 selectedArr : [],
                 selectedID : '',
                 selectedJson : {},
             })
         }else{
-            console.log('hi')
             this.getNode(id) // view the specified node
-            this.getTree() // refresh node
         }
+        this.getTree() // refresh node
         this.setState({
             display : 'view'
         })
