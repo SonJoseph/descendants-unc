@@ -2,6 +2,8 @@ import React from 'react'
 
 import ScreenRegistry from '../components/ScreenRegistry'
 import Container from '@material-ui/core/Container'
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 import * as d3 from "d3"
 import _ from 'lodash'
@@ -152,7 +154,6 @@ class UpdateTree extends React.Component {
         const props = {}
 
         return (
-            <Container>
 
                 <SplitPane split="vertical" defaultSize={400}>
 
@@ -168,14 +169,20 @@ class UpdateTree extends React.Component {
                                     message={'Click a person to view their information!'}
                                 />}
                             </div>
-
-                            <div >
-                                <p class="text"> {this.state.root_name}'s Family </p>
-                                <svg ref="tree" id = "graph" width={1000} height={700}></svg>
-                            </div>
+                            <Grid container spacing={3} justify= 'center' direction="column" >
+                                <Grid item>
+                                  <Container maxWidth='md'>
+                                    <Typography variant='h3'> {this.state.root_name}'s Family </Typography>
+                                  </Container >
+                                </Grid >
+                                <Container maxWidth='md'>
+                                  <div>
+                                    <svg ref="tree" id = "graph" viewBox="0,0,800,800" width="100%" heightx="100%"></svg>
+                                  </div>
+                                </Container >
+                            </Grid>
                 </SplitPane>
 
-            </Container>
 
         )
     }
