@@ -47,7 +47,7 @@ def getSpouseId(nodeid):
     with driver.session() as session:
         result = session.run("MATCH (n:Person {id: " + "'" + nodeid + "'" + "})-[:spouse]-(target:Person) RETURN target.id AS spouseId")
         if (result.peek() is None):
-            return jsonify("None")
+            return jsonify({'data': 'none'})
         else:
             return jsonify({'spouseId': result.single()['spouseId']})
 

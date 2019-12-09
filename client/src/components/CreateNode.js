@@ -27,7 +27,7 @@ class CreateNode extends React.Component {
             death: this.props.isUpdate ? this.props.selectedJson['death'] : '',
             moreinfo: this.props.isUpdate ? this.props.selectedJson['moreinfo'] : '',
             isRoot: this.props.isRoot,
-
+            hasSpouse: false,
             documents: this.props.isUpdate ? this.props.selectedJson['documents'] : [
                 {
                     name : '',
@@ -100,14 +100,20 @@ class CreateNode extends React.Component {
                 /*
                     Create the specified relationship to the newly created node
                 */
-                let spouse_id = 'undefined'
+                let spouse_id = ''
                 if(!newRootWithReln){
                   const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
                   const json_spouse = await response_spouse.json()
                   spouse_id = json_spouse['spouseId']
 
+<<<<<<< HEAD
                   
                   url = '/api/createrelationship/newId='+myJson['utoid']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+=======
+
+
+                  url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+>>>>>>> 3017c12fc5a7536c52f098765d31943dca978b2c
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
 
@@ -167,6 +173,7 @@ class CreateNode extends React.Component {
                               this.props.selectedJson.hasOwnProperty('root') ? true : false
                             } // For adding parent to root
                             name = {this.state.name}
+                            nodeid = {this.props.selectedID}
                         />
                         }
                   </Grid>
