@@ -11,6 +11,7 @@ app = Flask(__name__, static_folder='client/build')
 socketio = SocketIO(app, cors_allowed_origins="*")
 driver = {}
 
+
 def connect(): # this is called when the app is created
     global driver
     driver = GraphDatabase.driver(os.environ.get("GRAPHENEDB_BOLT_URL"), auth=basic_auth(os.environ.get("GRAPHENEDB_BOLT_USER"), os.environ.get("GRAPHENEDB_BOLT_PASSWORD")))
