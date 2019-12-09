@@ -31,15 +31,22 @@ class ViewNode extends React.Component {
         }
 
         return(
-            <Grid style = {{margin:15}}>
-                <Typography variant='h4'>Viewing {this.props.selectedJson['name']}</Typography>
-                <List id="viewNodeInfo">
-                    {
-                        Display
-                    }
-                </List>
-                <Button onClick={this.props.edit}> Edit </Button>
-                <Button onClick={this.props.add}> Add Relative </Button>
+            <Grid direction="column" container style = {{margin:15}}>
+                <Grid item>
+                  <Typography variant='h4'>Viewing {this.props.selectedJson['name']}</Typography>
+                  <List id="viewNodeInfo">
+                      {
+                          Display
+                      }
+                  </List>
+                </Grid>
+
+                <Grid item>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                  <Grid item><Button onClick={this.props.edit} variant="contained" color="primary" size="medium" style={{ margin: 8 }}> Edit </Button></Grid>
+                  <Grid item><Button onClick={this.props.add} variant="outlined" color="primary" size="medium" style={{ margin: 8 }}> Add Relative to {this.props.selectedJson['name']}</Button></Grid>
+                  </Grid>
+                </Grid>
             </Grid>
         )
     }
