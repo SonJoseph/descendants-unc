@@ -5,6 +5,9 @@ import SplitPane from 'react-split-pane'
 import TextField from '@material-ui/core/TextField'
 import CreateNode from '../components/CreateNode'
 import CreatePopup from '../components/CreatePopup'
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
 
 class SelectTree extends React.Component {
     /*
@@ -23,6 +26,7 @@ class SelectTree extends React.Component {
         const response = await fetch('/api/gettrees')
         const myJson = await response.json()
         this.setState({tree_roots : myJson.tree_roots})
+        console.log(this.tree_roots)
     }
 
     updateTree = (tree) => {
@@ -40,29 +44,36 @@ class SelectTree extends React.Component {
 
     render() {
         return (
-          <SplitPane split='horizontal' defaultSize={200}>
           <div>
-            <h1>The Descendants Project</h1>
-            <CreatePopup  />
+            <Grid container spacing={3} justify= 'center' direction="column" style={{margin:8}}>
+              <Grid item >
+                <Container maxWidth="md">
+                  <Typography variant='h2' align='center'> The Descendants Project </Typography>
+                </Container>
+              </Grid>
+              <Grid item >
+                <Container maxWidth="sm">
+                  <Grid container spacing={3} justify= 'center'>
+                    <Grid item>
+                      <Typography variant='h5'> Select Existing Tree </Typography>
+                    </Grid>
+                    <Grid item container spacing={1} justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
+                        {
+                            this.state.tree_roots.map(
+                                (item) => <Grid item> <Button color="secondary" onClick={() => this.updateTree(item)}  variant="outlined" color="primary" > {item.name} </Button> </Grid>
+                            )
+                        }
+                        {/* <ListItem style={{ width: '100%', marginTop: '30px' }}><Button style={{ width: '100%' }} variant="outlined" color="primary" onClick={() => this.props.history.push('/createClass')}> Add a new class </Button></ListItem> */}
+                    </Grid>
+                    <Grid item>
+                      <CreatePopup  />
+                    </Grid>
+                  </Grid>
+                </Container>
+              </Grid>
+            </Grid>
           </div>
 
-          <SplitPane split="vertical" defaultSize={700}>
-            <div>
-                <h1>Select Existing Tree</h1>
-                <List>
-                    {
-                        this.state.tree_roots.map(
-                            (item) => <ListItem> <Button onClick={() => this.updateTree(item)}  variant="outlined" color="primary" > {item.name} </Button> </ListItem>
-                        )
-                    }
-                    {/* <ListItem style={{ width: '100%', marginTop: '30px' }}><Button style={{ width: '100%' }} variant="outlined" color="primary" onClick={() => this.props.history.push('/createClass')}> Add a new class </Button></ListItem> */}
-                </List>
-            </div>
-            <CreateNode history={this.props.history} isRoot={true} isUpdate={false}/>
-
-            </SplitPane>
-
-          </SplitPane>
 
         )
     }

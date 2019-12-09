@@ -2,6 +2,7 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Alert from '../components/Alert.js'
+import { Route , withRouter} from 'react-router-dom';
 import CreateNode from '../components/CreateNode'
 
 class UpdateNode extends React.Component {
@@ -23,11 +24,19 @@ class UpdateNode extends React.Component {
     }
 
     deleteNode = async () => {
+      console.log(this.props.selectedJson['root'])
       let url = '/api/deletenode/id='+this.props.selectedID;
       const response = await fetch(url)
       const myJson = await response.json()
+      if(this.props.selectedJson['root'] === 1){
+        this.props.history.push({
+            pathname: '/',
+        })
+      } else {
+        this.props.back()
+      }
       this.props.refreshTree()
-      this.props.back(true)
+
     }
 
     render(){
@@ -49,4 +58,4 @@ class UpdateNode extends React.Component {
 
 }
 
-export default UpdateNode
+export default withRouter(UpdateNode)

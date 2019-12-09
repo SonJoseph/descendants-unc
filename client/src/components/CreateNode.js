@@ -69,6 +69,9 @@ class CreateNode extends React.Component {
      }
 
     create = async() => {
+        if(!this.state.name){
+          return
+        }
         let person = {
             name: this.state.name,
             gender: this.state.gender,
@@ -79,11 +82,11 @@ class CreateNode extends React.Component {
         }
         if(!this.props.isUpdate){
           let newRootWithReln = this.state.relnType === 'child';
-            if(this.state.isRoot || newRootWithReln){ 
-              /* 
+            if(this.state.isRoot || newRootWithReln){
+              /*
                 We are creating a new tree from scratch
                   OR
-                We are adding a new root whose child is the selectedID 
+                We are adding a new root whose child is the selectedID
               */
                 person['root'] = 1
             }
@@ -151,7 +154,8 @@ class CreateNode extends React.Component {
                     <Grid container spacing={2} direction="row">
 
                     <Grid item>
-                      <TextField label="Name" name='name' onChange={this.updateRootInfo}  defaultValue={this.state.name}/>
+                      <TextField label="Name" name='name' onChange={this.updateRootInfo}  defaultValue={this.state.name} error={this.state.name === ""}
+                      helperText={this.state.name === "" ? 'Name Field Required' : ' '} />
                     </Grid>
 
                     <Grid item>
