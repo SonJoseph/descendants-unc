@@ -29,10 +29,7 @@ class CreateNode extends React.Component {
             isRoot: this.props.isRoot,
 
             documents: this.props.isUpdate ? this.props.selectedJson['documents'] : [
-                {
-                    name : '',
-                    link : ''
-                }
+
             ],
 
             relnType:''
@@ -71,7 +68,7 @@ class CreateNode extends React.Component {
      }
 
     create = async() => {
-        if(!this.state.name){
+        if(!this.state.name || !this.state.relnType){
           return
         }
         let person = {
@@ -150,7 +147,7 @@ class CreateNode extends React.Component {
         return(
             <div>
 
-                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '10px', maxHeight: '100%', overflow: 'auto'}}>
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '10px', maxHeight: '100%', overflowY: 'auto'}}>
                   <Grid item>
                   {this.props.isUpdate && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Editing {this.state.name}</Typography>}
                   {!this.props.isUpdate && !this.props.isRoot && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Adding Relative to {this.props.selectedJson['name']}</Typography>}

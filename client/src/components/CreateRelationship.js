@@ -32,7 +32,8 @@ class CreateRelationship extends React.Component {
 
         return (
             <div>
-                    <FormControl variant="outlined" className="formControl">
+                    <FormControl variant="outlined" className="formControl" error={!this.state.reln}
+                    helperText={!this.state.reln ? 'Name Field Required' : ' '}>
                       <InputLabel>Relationship</InputLabel>
                     <Select
                         name="relnType"

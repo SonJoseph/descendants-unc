@@ -15,7 +15,7 @@ class Property extends React.Component {
     }
 
     render() {
-        let Display = this.props.k + ' : ' + this.props.val // this.props.val is an array
+        let Display = this.props.k + ': ' + this.props.val // this.props.val is an array
         if(this.props.k === 'documents'){
 
             Display = []

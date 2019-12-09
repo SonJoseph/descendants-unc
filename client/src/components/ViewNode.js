@@ -17,6 +17,13 @@ class ViewNode extends React.Component {
         for(let i=0; i<this.props.selectedArr.length; i++){
           let key = this.props.selectedArr[i][0]
             if (key != 'name'){
+              switch(key){
+                case "birth": case "death": case "gender":
+                  key = key.charAt(0).toUpperCase() + key.slice(1);
+                  break;
+                case "moreinfo":
+                  key="Notes"
+              }
 
               let val = this.props.selectedArr[i][1]
 
