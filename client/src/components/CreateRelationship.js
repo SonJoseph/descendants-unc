@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import CreateNode from './CreateNode'
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 
 class CreateRelationship extends React.Component {
 
@@ -30,7 +32,8 @@ class CreateRelationship extends React.Component {
 
         return (
             <div>
-                    <h2 >What is {this.props.name}'s relationship to {this.props.selectedName}? </h2>
+                    <FormControl variant="outlined" className="formControl">
+                      <InputLabel>Relationship</InputLabel>
                     <Select
                         name="relnType"
                         onChange={this.update}
@@ -40,6 +43,8 @@ class CreateRelationship extends React.Component {
                         <MenuItem value={'parent'}>Child</MenuItem>
                         { this.props.selectedIsRoot && <MenuItem value={'child'}>Parent</MenuItem>}
                     </Select>
+                    <FormHelperText>What is this new person's relationship to {this.props.selectedName}? </FormHelperText>
+                  </FormControl>
             </div>
 
         )

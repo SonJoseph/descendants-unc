@@ -155,7 +155,7 @@ class UpdateTree extends React.Component {
 
         return (
 
-                <SplitPane split="vertical" defaultSize={400}>
+                <SplitPane split="vertical" minSize={410} defaultSize={410}>
 
                             <div style={{maxHeight: '100%', overflow: 'auto'}}>
                                 {<Form
