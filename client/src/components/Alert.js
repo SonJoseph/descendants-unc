@@ -12,7 +12,7 @@ class Alert extends React.Component {
 
     render(){
       return(
-        <Popup trigger={<Grid container justify="center" alignItems="center"><Grid item><Button variant="contained" size="large" style={{margin: 8}}> Delete </Button></Grid></Grid>} position="right center" modal>
+        <Popup trigger={<Grid container justify="center" alignItems="center"><Grid item><Button variant="contained" size="large" style={{margin: 8}}> Delete This Person </Button></Grid></Grid>} position="right center" modal>
           {close => (
               <div>
                 <Typography variant="h6"> Are you sure you want to delete this person from the tree? </Typography>

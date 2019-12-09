@@ -150,7 +150,7 @@ class CreateNode extends React.Component {
         return(
             <div>
 
-                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '5px', maxHeight: '100%', overflow: 'auto'}}>
                   <Grid item>
                   {this.props.isUpdate && <Typography variant='h4'>Editing {this.state.name}</Typography>}
                   {!this.props.isUpdate && !this.props.isRoot && <Typography variant='h4'>Adding Relative to {this.props.selectedJson['name']}</Typography>}

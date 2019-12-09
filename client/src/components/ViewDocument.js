@@ -3,7 +3,7 @@
 */
 import React from 'react'
 import { List, ListItem, ListItemText } from '@material-ui/core'
-
+import TextField from '@material-ui/core/TextField'
 
 class ViewDocument extends React.Component {
     constructor(props){
@@ -14,11 +14,11 @@ class ViewDocument extends React.Component {
         return(
             <ListItem>
                 <ListItemText>
-                    {this.props.k + " : "} <a href={this.props.val}> {this.props.val} </a>
+                    {this.props.k + ": "} <a href={this.props.val}> {this.props.val} </a>
                 </ListItemText>
             </ListItem>
         )
-    }   
+    }
 }
 
 export default ViewDocument

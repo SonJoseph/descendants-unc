@@ -57,7 +57,7 @@ class SelectTree extends React.Component {
                     <Grid item>
                       <Typography variant='h5'> Select Existing Tree </Typography>
                     </Grid>
-                    <Grid item container spacing={1} justify="center" alignItems="center" style={{height:300, overflow: 'auto'}}>
+                    <Grid item container spacing={1} justify="center" alignItems="center" style={{height:400, overflow: 'auto',  borderStyle: 'solid', borderWidth: '0.5px'}}>
                         {
                             this.state.tree_roots.map(
                                 (item) => <Grid item> <Button color="secondary" onClick={() => this.updateTree(item)}  variant="outlined" color="primary" > {item.name} </Button> </Grid>
