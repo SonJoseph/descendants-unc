@@ -4,6 +4,13 @@ import ScreenRegistry from '../components/ScreenRegistry'
 import Container from '@material-ui/core/Container'
 import openSocket from 'socket.io-client'
 import Cookies from 'universal-cookie'
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import { Divider } from '@material-ui/core';
+// import Home from '@material-ui/icons/Home';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button'
+
 
 import * as d3 from "d3"
 import _ from 'lodash'
@@ -150,6 +157,12 @@ class UpdateTree extends React.Component {
         this.back(false, id)
     }
 
+    goHome = () => {
+      this.props.history.push({
+          pathname: '/',
+      })
+    }
+
    edit = () => {
        this.setState({
            display : 'update'
@@ -186,11 +199,10 @@ class UpdateTree extends React.Component {
         const props = {}
 
         return (
-            <Container>
 
-                <SplitPane split="vertical" defaultSize={400}>
+                <SplitPane split="vertical" minSize={450} defaultSize={450} maxSize={450}>
 
-                            <div style={{maxHeight: '100%', overflow: 'auto'}}>
+                            <div style={{maxHeight: '100%', overflowX: 'hidden', overflowY: 'auto'}}>
                                 {<Form
                                     {...this.state} // parent's state can be accesed in child via this.props...
                                     isRoot={false}
@@ -202,14 +214,29 @@ class UpdateTree extends React.Component {
                                     message={'Click a person to view their information!'}
                                 />}
                             </div>
+                            <Grid container spacing={3} justify= 'center' direction="column" >
+                                <Grid item>
+                                  <Container maxWidth='lg' style={{marginTop: '10px', marginBottom: '10px'}}>
+                                    <Grid container spacing={3} justify= 'space-between' alignItems='center' direction="row" >
+                                      <Grid item>
+                                        <Typography variant='h2'style={{textAlign: "center", marginTop: '10px'}}> {this.state.root_name}'s Family </Typography>
+                                      </Grid>
+                                      <Grid item>
+                                        <Button color="secondary" onClick={this.goHome} variant="outlined" color="secondary" size="large" label="Finish"> Home
+                                        </Button>
+                                      </Grid>
+                                  </Grid>
 
-                            <div >
-                                <p class="text"> {this.state.root_name}'s Family </p>
-                                <svg ref="tree" id = "graph" width={1000} height={700}></svg>
-                            </div>
+                                  </Container >
+                                </Grid >
+                                <Container maxWidth='lg'>
+                                  <div>
+                                    <svg ref="tree" id = "graph" width="100%" height="560" style={{ borderWidth: "0px"}}></svg>
+                                  </div>
+                                </Container >
+                            </Grid>
                 </SplitPane>
 
-            </Container>
 
         )
     }

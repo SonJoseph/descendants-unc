@@ -39,7 +39,6 @@ class UpdateNode extends React.Component {
     render(){
         return(
             <div>
-                <div> Edit </div>
                 <CreateNode
                     selectedJson = {this.props.selectedJson}
                     isRoot = {false}

@@ -18,9 +18,9 @@ body {
 	    stroke: black;
 	}
 	.node {
-	    background-color: lightblue;
-			border-style: solid;
-			padding: 2px 2px 2px 2px;
+	    background-color: #4253B8;
+			color: white;
+			padding: 3px 3px 3px 3px;
 			border-width: 1px;
 			box-sizing: border-box;
 	}

@@ -9,6 +9,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import { Typography } from '@material-ui/core';
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
@@ -25,12 +27,9 @@ class CreateNode extends React.Component {
             death: this.props.isUpdate ? this.props.selectedJson['death'] : '',
             moreinfo: this.props.isUpdate ? this.props.selectedJson['moreinfo'] : '',
             isRoot: this.props.isRoot,
-
+            hasSpouse: false,
             documents: this.props.isUpdate ? this.props.selectedJson['documents'] : [
-                {
-                    name : '',
-                    link : ''
-                }
+
             ],
 
             relnType:''
@@ -69,7 +68,7 @@ class CreateNode extends React.Component {
      }
 
     create = async() => {
-        if(!this.state.name){
+        if(!this.state.name || !this.state.relnType){
           return
         }
         let person = {
@@ -98,11 +97,13 @@ class CreateNode extends React.Component {
                 /*
                     Create the specified relationship to the newly created node
                 */
-                let spouse_id = 'undefined'
+                let spouse_id = ''
                 if(!newRootWithReln){
                   const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
                   const json_spouse = await response_spouse.json()
                   spouse_id = json_spouse['spouseId']
+
+
 
                   url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
                   const response = await fetch(url)
@@ -114,6 +115,7 @@ class CreateNode extends React.Component {
                 }else{
                   // Make the new node the parent of the selected (in this case, that is the old root node)
                   url = '/api/createrelationship/newId='+this.props.selectedID+'&relnId='+myJson['id']+'&relnType=parent&spouseId='+spouse_id
+
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
                   this.props.changeRoot(myJson['id'])
@@ -129,6 +131,8 @@ class CreateNode extends React.Component {
             this.props.updateNode(person)
         }
     }
+
+
     render(){
         const Documents = []
 
@@ -146,51 +150,67 @@ class CreateNode extends React.Component {
         return(
             <div>
 
-                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
-                  {this.props.isUpdate && <h2>Editing {this.state.name}</h2>}
-                  {!this.props.isUpdate && !this.props.isRoot && <h2>Adding Relative to {this.props.selectedJson['name']}</h2>}
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '10px', maxHeight: '100%', overflowX: 'hidden', overflowY: 'auto'}}>
+                  <Grid item>
+                  {this.props.isUpdate && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Editing {this.state.name}</Typography>}
+                  {!this.props.isUpdate && !this.props.isRoot && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Adding Relative to {this.props.selectedJson['name']}</Typography>}
+                  </Grid>
+
+                  <Grid item style = {{margin: 8}}>
+                        {
+                            !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
+                            updateRelnForm = {this.updateRelnForm}
+                            selectedName = {this.props.selectedJson['name']}
+                            selectedIsRoot = {
+                              this.props.selectedJson.hasOwnProperty('root') ? true : false
+                            } // For adding parent to root
+                            name = {this.state.name}
+                            nodeid = {this.props.selectedID}
+                        />
+                        }
+                  </Grid>
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
-
-                    <Grid item>
-                      <TextField label="Name" name='name' onChange={this.updateRootInfo}  defaultValue={this.state.name} error={this.state.name === ""}
-                      helperText={this.state.name === "" ? 'Name Field Required' : ' '} />
-                    </Grid>
-
-                    <Grid item>
-                      <FormControl className="formControl">
-                        <InputLabel id="demo-mutiple-name-label">Gender</InputLabel>
-                          <Select
-                              name="gender"
-                              onChange={this.updateRootInfo}
-                              // value={this.state.gender}
-                              defaultValue={this.state.gender}
-                          >
-                          <MenuItem value="">  <em>None</em> </MenuItem>
-                              <MenuItem value={'female'}>Female</MenuItem>
-                              <MenuItem value={'male'}>Male</MenuItem>
-                              <MenuItem value={'non-binary'}>NonBinary</MenuItem>
-                              <MenuItem value={'unknown'}>Unknown</MenuItem>
-                          </Select>
-                        </FormControl>
+                      <Grid item>
+                        <TextField label="Name" name='name' variant="outlined" style={{marginTop: 8}} onChange={this.updateRootInfo}  defaultValue={this.state.name} error={this.state.name === ""}
+                        helperText={this.state.name === "" ? 'Name Field Required' : ' '} />
                       </Grid>
+
+                      <Grid item>
+                        <FormControl variant="outlined" className="formControl">
+                          <InputLabel>Gender</InputLabel>
+                            <Select
+                                name="gender"
+                                onChange={this.updateRootInfo}
+                                value={this.state.gender}
+                                defaultValue={this.state.gender}
+                                style={{marginTop: 8}}
+                            >
+                                <MenuItem value={'female'}>Female</MenuItem>
+                                <MenuItem value={'male'}>Male</MenuItem>
+                                <MenuItem value={'non-binary'}>NonBinary</MenuItem>
+                                <MenuItem value={'unknown'}>Unknown</MenuItem>
+                            </Select>
+                            <FormHelperText>Please select a gender here.</FormHelperText>
+                          </FormControl>
+                        </Grid>
                       </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
                       <Grid item>
-                        <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.birth}/>
+                        <TextField label="Birth Date" name='birth' type="date" variant="outlined" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.birth}/>
                       </Grid>
                       <Grid item>
-                        <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
+                        <TextField label="Death Date" name='death' type="date" variant="outlined" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
                       </Grid>
                     </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
-                    <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="6"
-                    defaultValue="Add here..." variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo} defaultValue={this.state.moreinfo}/>
+                    <TextField id="outlined-multiline-static" name='moreinfo' label="Add more information here..." multiline rows="4"
+                    variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo} defaultValue={this.state.moreinfo} style={{width: 400}}/>
                   </Grid>
 
                   <Grid item xs={12}>
@@ -210,18 +230,7 @@ class CreateNode extends React.Component {
                           </ButtonGroup>
                       </Grid>
 
-                      <Grid item style = {{margin: 8}}>
-                            {
-                                !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
-                                updateRelnForm = {this.updateRelnForm}
-                                selectedName = {this.props.selectedJson['name']}
-                                selectedIsRoot = {
-                                  this.props.selectedJson.hasOwnProperty('root') ? true : false
-                                } // For adding parent to root
-                                name = {this.state.name}
-                            />
-                            }
-                      </Grid>
+
 
                     </Grid>
                   </Grid>

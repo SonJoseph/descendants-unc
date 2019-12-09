@@ -45,7 +45,7 @@ class SelectTree extends React.Component {
     render() {
         return (
           <div>
-            <Grid container spacing={3} justify= 'center' direction="column" style={{margin:8}}>
+            <Grid container spacing={4} justify= 'center' direction="column" style={{margin:8}}>
               <Grid item >
                 <Container maxWidth="md">
                   <Typography variant='h2' align='center'> The Descendants Project </Typography>
@@ -53,11 +53,11 @@ class SelectTree extends React.Component {
               </Grid>
               <Grid item >
                 <Container maxWidth="sm">
-                  <Grid container spacing={3} justify= 'center'>
+                  <Grid container spacing={4} justify= 'center'>
                     <Grid item>
-                      <Typography variant='h5'> Select Existing Tree </Typography>
+                      <Typography variant='h5'> Click to view an existing tree.</Typography>
                     </Grid>
-                    <Grid item container spacing={1} justify="center" alignItems="center" style={{height:300, overflow: 'auto'}}>
+                    <Grid item container spacing={2} justify="center" alignItems="center" style={{height:400, overflow: 'auto'}}>
                         {
                             this.state.tree_roots.map(
                                 (item) => <Grid item> <Button color="secondary" onClick={() => this.updateTree(item)}  variant="outlined" color="primary" > {item.name} </Button> </Grid>

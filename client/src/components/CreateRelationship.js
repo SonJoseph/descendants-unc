@@ -6,6 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import CreateNode from './CreateNode'
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
 
 class CreateRelationship extends React.Component {
 
@@ -15,8 +17,11 @@ class CreateRelationship extends React.Component {
         console.log('Is the selected node the root of the tree?: ' + this.props.selectedIsRoot)
 
         this.state = {
-            reln : ''
+            reln : '',
+            hasSpouse: true
         }
+
+        this.checkSpouse()
     }
 
     update = (e) => {
@@ -26,20 +31,34 @@ class CreateRelationship extends React.Component {
         this.props.updateRelnForm(e.target.value) // We have to send the updated state back to the parent
     }
 
+    checkSpouse = async() => {
+      const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.nodeid)
+      const json_spouse = await response_spouse.json()
+      if (json_spouse['data'] === 'none'){
+        this.setState({
+          hasSpouse : false
+        })
+      }
+    }
+
     render(){
 
         return (
             <div>
-                    <h2 >What is {this.props.name}'s relationship to {this.props.selectedName}? </h2>
+                    <FormControl variant="outlined" className="formControl" error={!this.state.reln}
+                    helperText={!this.state.reln ? 'Name Field Required' : ' '}>
+                      <InputLabel>Relationship</InputLabel>
                     <Select
                         name="relnType"
                         onChange={this.update}
                         value={this.state.reln}
                     >
-                        <MenuItem value={'spouse'}>Spouse</MenuItem>
+                        {!this.state.hasSpouse && <MenuItem value={'spouse'}>Spouse</MenuItem>}
                         <MenuItem value={'parent'}>Child</MenuItem>
                         { this.props.selectedIsRoot && <MenuItem value={'child'}>Parent</MenuItem>}
                     </Select>
+                    <FormHelperText>What is this new person's relationship to {this.props.selectedName}? </FormHelperText>
+                  </FormControl>
             </div>
 
         )
