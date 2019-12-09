@@ -15,7 +15,7 @@ class UpdateTree extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            display : 'view',
+            display : 'home',
 
             root_name : props.location.state.family.name,
             root_id : props.location.state.family.id,
@@ -129,14 +129,15 @@ class UpdateTree extends React.Component {
                 selectedArr : [],
                 selectedID : '',
                 selectedJson : {},
+                display : 'home'
             })
         }else{
             this.getNode(id) // view the specified node
+            this.setState({
+                display : 'view'
+            })
         }
         this.getTree() // refresh node
-        this.setState({
-            display : 'view'
-        })
    }
 
    add = () => {
@@ -164,6 +165,7 @@ class UpdateTree extends React.Component {
                                     add={this.add.bind(this)}
 
                                     changeRoot={this.changeRoot.bind(this)}
+                                    message={'Click a person to view their information!'}
                                 />}
                             </div>
 
