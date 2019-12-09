@@ -52,12 +52,6 @@ class UpdateTree extends React.Component {
     }
 
     getTree = async (sendMsg=true) => { // We currently can't change the root of the tree
-        if(sendMsg == true){
-            this.state.socket.emit('FetchTree', {
-                'session' : this.state.session,
-                'tree_id' : this.state.root_id
-            })
-        }
         const response = await fetch('/api/gettree/id='+ this.state.root_id)
         const myJson = await response.json()
         this.setState({
@@ -65,6 +59,13 @@ class UpdateTree extends React.Component {
             tree : myJson
         })
         this.drawTree()
+
+        if(sendMsg == true){
+            this.state.socket.emit('FetchTree', {
+                'session' : this.state.session,
+                'tree_id' : this.state.root_id
+            })
+        }
     }
 
     componentDidMount() {
