@@ -106,7 +106,8 @@ class CreateNode extends React.Component {
                   const json_spouse = await response_spouse.json()
                   spouse_id = json_spouse['spouseId']
 
-                  url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+                  
+                  url = '/api/createrelationship/newId='+myJson['utoid']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
 
@@ -116,6 +117,7 @@ class CreateNode extends React.Component {
                 }else{
                   // Make the new node the parent of the selected (in this case, that is the old root node)
                   url = '/api/createrelationship/newId='+this.props.selectedID+'&relnId='+myJson['id']+'&relnType=parent&spouseId='+spouse_id
+                  
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
                   this.props.changeRoot(myJson['id'])
@@ -150,7 +152,7 @@ class CreateNode extends React.Component {
         return(
             <div>
 
-                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '10px', maxHeight: '100%', overflow: 'auto'}}>
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{marginTop: '10px', maxHeight: '100%', overflowX: 'hidden', overflowY: 'auto'}}>
                   <Grid item>
                   {this.props.isUpdate && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Editing {this.state.name}</Typography>}
                   {!this.props.isUpdate && !this.props.isRoot && <Typography variant='h4' style={{color: "#4253B8", marginLeft: '5px'}}>Adding Relative to {this.props.selectedJson['name']}</Typography>}
