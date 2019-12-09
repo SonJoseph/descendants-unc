@@ -17,8 +17,11 @@ class CreateRelationship extends React.Component {
         console.log('Is the selected node the root of the tree?: ' + this.props.selectedIsRoot)
 
         this.state = {
-            reln : ''
+            reln : '',
+            hasSpouse: true
         }
+
+        this.checkSpouse()
     }
 
     update = (e) => {
@@ -26,6 +29,16 @@ class CreateRelationship extends React.Component {
             reln : e.target.value
         })
         this.props.updateRelnForm(e.target.value) // We have to send the updated state back to the parent
+    }
+
+    checkSpouse = async() => {
+      const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.nodeid)
+      const json_spouse = await response_spouse.json()
+      if (json_spouse['data'] === 'none'){
+        this.setState({
+          hasSpouse : false
+        })
+      }
     }
 
     render(){
@@ -40,7 +53,7 @@ class CreateRelationship extends React.Component {
                         onChange={this.update}
                         value={this.state.reln}
                     >
-                        <MenuItem value={'spouse'}>Spouse</MenuItem>
+                        {!this.state.hasSpouse && <MenuItem value={'spouse'}>Spouse</MenuItem>}
                         <MenuItem value={'parent'}>Child</MenuItem>
                         { this.props.selectedIsRoot && <MenuItem value={'child'}>Parent</MenuItem>}
                     </Select>

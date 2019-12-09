@@ -166,9 +166,9 @@ class UpdateTree extends React.Component {
 
         return (
 
-                <SplitPane split="vertical" minSize={440} defaultSize={440} maxSize={440}>
+                <SplitPane split="vertical" minSize={450} defaultSize={450} maxSize={450}>
 
-                            <div style={{maxHeight: '100%', overflowY: 'auto'}}>
+                            <div style={{maxHeight: '100%', overflowX: 'hidden', overflowY: 'auto'}}>
                                 {<Form
                                     {...this.state} // parent's state can be accesed in child via this.props...
                                     isRoot={false}
