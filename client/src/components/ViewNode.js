@@ -2,6 +2,8 @@ import React from 'react'
 import Button from '@material-ui/core/Button'
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import Property from '../components/Property'
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 class ViewNode extends React.Component {
 
@@ -29,8 +31,8 @@ class ViewNode extends React.Component {
         }
 
         return(
-            <div>
-                <h1>Viewing {this.props.selectedJson['name']}</h1>
+            <Grid style = {{margin:15}}>
+                <Typography variant='h4'>Viewing {this.props.selectedJson['name']}</Typography>
                 <List id="viewNodeInfo">
                     {
                         Display
@@ -38,7 +40,7 @@ class ViewNode extends React.Component {
                 </List>
                 <Button onClick={this.props.edit}> Edit </Button>
                 <Button onClick={this.props.add}> Add Relative </Button>
-            </div>
+            </Grid>
         )
     }
 }

@@ -2,6 +2,8 @@ import React from "react";
 import Popup from "reactjs-popup";
 import Button from '@material-ui/core/Button'
 import CreateNode from '../components/CreateNode'
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 class CreatePopup extends React.Component {
 
@@ -16,9 +18,9 @@ class CreatePopup extends React.Component {
       return(
         <Popup trigger={<Button color="secondary" variant="contained"> Add New Tree </Button>} position="right center" modal>
           {close => (
-              <div style={{margin: 8}}>
-                <h1> Add your first person to the family tree! </h1>
-                <p> Your family tree will be idenitifed by this person. You can change this later. </p>
+              <div>
+                <Typography variant='h4'> Add your first person to the family tree! </Typography>
+                <Typography variant='body1'>  Your family tree will be identifed by this person. You can change this later. </Typography>
                 <CreateNode {...this.state}
                   close={close.bind(this)}
                   />

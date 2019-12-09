@@ -9,7 +9,11 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
+<<<<<<< HEAD
 import FormHelperText from '@material-ui/core/FormHelperText';
+=======
+import { Typography } from '@material-ui/core';
+>>>>>>> eea447278909ee1b76233e37a766555aa095d5bf
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
@@ -150,9 +154,10 @@ class CreateNode extends React.Component {
             <div>
 
                 <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
-
-                  {this.props.isUpdate && <h2>Editing {this.state.name}</h2>}
-                  {!this.props.isUpdate && !this.props.isRoot && <h2>Adding Relative to {this.props.selectedJson['name']}</h2>}
+                  <Grid item>
+                  {this.props.isUpdate && <Typography variant='h4'>Editing {this.state.name}</Typography>}
+                  {!this.props.isUpdate && !this.props.isRoot && <Typography variant='h4'>Adding Relative to {this.props.selectedJson['name']}</Typography>}
+                  </Grid>
 
                   <Grid item style = {{margin: 8}}>
                         {
