@@ -16,7 +16,7 @@ class CreatePopup extends React.Component {
       return(
         <Popup trigger={<Button color="secondary" variant="contained"> Add New Tree </Button>} position="right center" modal>
           {close => (
-              <div>
+              <div style={{margin: 8}}>
                 <h1> Add your first person to the family tree! </h1>
                 <p> Your family tree will be idenitifed by this person. You can change this later. </p>
                 <CreateNode {...this.state}

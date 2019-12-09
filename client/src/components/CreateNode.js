@@ -9,6 +9,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Select from '@material-ui/core/Select'
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 import Document from './Document'
 import CreateRelationship from './CreateRelationship'
@@ -129,6 +130,8 @@ class CreateNode extends React.Component {
             this.props.updateNode(person)
         }
     }
+
+
     render(){
         const Documents = []
 
@@ -147,50 +150,64 @@ class CreateNode extends React.Component {
             <div>
 
                 <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
+
                   {this.props.isUpdate && <h2>Editing {this.state.name}</h2>}
                   {!this.props.isUpdate && !this.props.isRoot && <h2>Adding Relative to {this.props.selectedJson['name']}</h2>}
+
+                  <Grid item style = {{margin: 8}}>
+                        {
+                            !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
+                            updateRelnForm = {this.updateRelnForm}
+                            selectedName = {this.props.selectedJson['name']}
+                            selectedIsRoot = {
+                              this.props.selectedJson.hasOwnProperty('root') ? true : false
+                            } // For adding parent to root
+                            name = {this.state.name}
+                        />
+                        }
+                  </Grid>
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
-
-                    <Grid item>
-                      <TextField label="Name" name='name' onChange={this.updateRootInfo}  defaultValue={this.state.name} error={this.state.name === ""}
-                      helperText={this.state.name === "" ? 'Name Field Required' : ' '} />
-                    </Grid>
-
-                    <Grid item>
-                      <FormControl className="formControl">
-                        <InputLabel id="demo-mutiple-name-label">Gender</InputLabel>
-                          <Select
-                              name="gender"
-                              onChange={this.updateRootInfo}
-                              // value={this.state.gender}
-                              defaultValue={this.state.gender}
-                          >
-                          <MenuItem value="">  <em>None</em> </MenuItem>
-                              <MenuItem value={'female'}>Female</MenuItem>
-                              <MenuItem value={'male'}>Male</MenuItem>
-                              <MenuItem value={'non-binary'}>NonBinary</MenuItem>
-                              <MenuItem value={'unknown'}>Unknown</MenuItem>
-                          </Select>
-                        </FormControl>
+                      <Grid item>
+                        <TextField label="Name" name='name' variant="outlined" style={{marginTop: 8}} onChange={this.updateRootInfo}  defaultValue={this.state.name} error={this.state.name === ""}
+                        helperText={this.state.name === "" ? 'Name Field Required' : ' '} />
                       </Grid>
+
+                      <Grid item>
+                        <FormControl variant="outlined" className="formControl">
+                          <InputLabel>Gender</InputLabel>
+                            <Select
+                                name="gender"
+                                onChange={this.updateRootInfo}
+                                value={this.state.gender}
+                                defaultValue={this.state.gender}
+                                style={{marginTop: 8}}
+                            >
+                                <MenuItem value={'female'}>Female</MenuItem>
+                                <MenuItem value={'male'}>Male</MenuItem>
+                                <MenuItem value={'non-binary'}>NonBinary</MenuItem>
+                                <MenuItem value={'unknown'}>Unknown</MenuItem>
+                            </Select>
+                            <FormHelperText>Please select a gender here.</FormHelperText>
+                          </FormControl>
+                        </Grid>
                       </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
                     <Grid container spacing={2} direction="row">
                       <Grid item>
-                        <TextField label="Birth Date" name='birth' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.birth}/>
+                        <TextField label="Birth Date" name='birth' type="date" variant="outlined" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.birth}/>
                       </Grid>
                       <Grid item>
-                        <TextField label="Death Date" name='death' type="date" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
+                        <TextField label="Death Date" name='death' type="date" variant="outlined" InputLabelProps={{shrink: true,}} onChange={this.updateRootInfo} defaultValue={this.state.death}/>
                       </Grid>
                     </Grid>
                   </Grid>
 
                   <Grid item xs={12}>
-                    <TextField id="outlined-multiline-static" name='moreinfo' label="More Information" multiline rows="6"
-                    defaultValue="Add here..." variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo} defaultValue={this.state.moreinfo}/>
+                    <TextField id="outlined-multiline-static" name='moreinfo' label="Add more information here..." multiline rows="4"
+                    variant="outlined" style={{ margin: 8 }} fullWidth onChange={this.updateRootInfo} defaultValue={this.state.moreinfo} style={{width: 400}}/>
                   </Grid>
 
                   <Grid item xs={12}>
@@ -210,18 +227,7 @@ class CreateNode extends React.Component {
                           </ButtonGroup>
                       </Grid>
 
-                      <Grid item style = {{margin: 8}}>
-                            {
-                                !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
-                                updateRelnForm = {this.updateRelnForm}
-                                selectedName = {this.props.selectedJson['name']}
-                                selectedIsRoot = {
-                                  this.props.selectedJson.hasOwnProperty('root') ? true : false
-                                } // For adding parent to root
-                                name = {this.state.name}
-                            />
-                            }
-                      </Grid>
+
 
                     </Grid>
                   </Grid>
