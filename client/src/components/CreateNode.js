@@ -68,7 +68,7 @@ class CreateNode extends React.Component {
      }
 
     create = async() => {
-        if(!this.state.name || !this.state.relnType){
+        if(!this.state.name){
           return
         }
         let person = {
@@ -103,7 +103,9 @@ class CreateNode extends React.Component {
                   const json_spouse = await response_spouse.json()
                   spouse_id = json_spouse['spouseId']
 
-
+                  if(!this.state.relnType){
+                    return
+                  }
 
                   url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
                   const response = await fetch(url)
