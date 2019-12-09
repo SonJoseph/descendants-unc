@@ -90,8 +90,6 @@ class UpdateTree extends React.Component {
         const response = await fetch('/api/getnode/id=' + id)
         const json = await response.json()
 
-        console.log(json)
-
         let arr = []
 
         json['documents'] = JSON.parse(json['documents'].replace(/\n|\r/g,'').replace(/'/g, '"'))
@@ -108,6 +106,13 @@ class UpdateTree extends React.Component {
             selectedID : id,
             selectedJson : json, // we use this to update fields
         })
+    }
+
+    changeRoot = (id) => {
+        console.log('hello')
+        this.state.root_id = id
+        this.state.selectedID = id // display the new root's information. This is done in 'back'
+        this.getTree() // update the tree to display the new root
     }
 
    edit = () => {
@@ -155,6 +160,7 @@ class UpdateTree extends React.Component {
                                     back={this.back.bind(this)}
                                     add={this.add.bind(this)}
                                     refreshTree={this.getTree.bind(this)}
+                                    changeRoot={this.changeRoot.bind(this)}
                                 />}
                             </div>
 

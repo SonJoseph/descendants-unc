@@ -78,33 +78,49 @@ class CreateNode extends React.Component {
             moreinfo: this.state.moreinfo
         }
         if(!this.props.isUpdate){
-            if(this.state.isRoot){
+          let newRootWithReln = this.state.relnType === 'child';
+            if(this.state.isRoot || newRootWithReln){ 
+              /* 
+                We are creating a new tree from scratch
+                  OR
+                We are adding a new root whose child is the selectedID 
+              */
                 person['root'] = 1
             }
             let url = '/api/createnode/person='+JSON.stringify(person)
             let response = await fetch(url)
             let myJson = await response.json()
 
-            if(this.state.isRoot){
-                this.props.history.push({
-                    pathname: '/update',
-                    state: { family: myJson }
-                })
-            }else{
+            if(!this.state.isRoot){
                 /*
                     Create the specified relationship to the newly created node
                 */
-                // get spouse id
-                const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
-                const json_spouse = await response_spouse.json()
-                let spouse_id = json_spouse['spouseId']
+                let spouse_id = 'undefined'
+                if(!newRootWithReln){
+                  const response_spouse = await fetch('/api/getspouseid/nodeid=' + this.props.selectedID)
+                  const json_spouse = await response_spouse.json()
+                  spouse_id = json_spouse['spouseId']
 
-                url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
-                const response = await fetch(url)
-                myJson = await response.json()
+                  url = '/api/createrelationship/newId='+myJson['id']+'&relnId='+this.props.selectedID+'&relnType='+this.state.relnType+'&spouseId='+spouse_id
+                  const response = await fetch(url)
+                  let createRelnJson = await response.json()
 
-                this.props.refreshTree() // go back to 'view node' in lhs of UpdateTree
-                this.props.back(false)
+                  this.props.refreshTree()
+                  this.props.back(false)
+                  return
+                }else{
+                  // Make the new node the parent of the selected (in this case, that is the old root node)
+                  url = '/api/createrelationship/newId='+this.props.selectedID+'&relnId='+myJson['id']+'&relnType=parent&spouseId='+spouse_id
+                  const response = await fetch(url)
+                  let createRelnJson = await response.json()
+                  this.props.changeRoot(myJson['id'])
+                  this.props.back(false)
+                }
+            }else{
+              this.props.history.push({
+                pathname: '/update',
+                state: { family: myJson }
+              })
             }
         }else{
             person['id'] = this.props.selectedJson['id']
@@ -144,7 +160,7 @@ class CreateNode extends React.Component {
                           <Select
                               name="gender"
                               onChange={this.updateRootInfo}
-                              value={this.state.gender}
+                              // value={this.state.gender}
                               defaultValue={this.state.gender}
                           >
                           <MenuItem value="">  <em>None</em> </MenuItem>
@@ -194,10 +210,13 @@ class CreateNode extends React.Component {
                       <Grid item style = {{margin: 8}}>
                             {
                                 !this.state.isRoot && !this.props.isUpdate && <CreateRelationship
-                                    updateRelnForm = {this.updateRelnForm}
-                                    selectedName = {this.props.selectedJson['name']}
-                                    name = {this.state.name}
-                                />
+                                updateRelnForm = {this.updateRelnForm}
+                                selectedName = {this.props.selectedJson['name']}
+                                selectedIsRoot = {
+                                  this.props.selectedJson.hasOwnProperty('root') ? true : false
+                                } // For adding parent to root
+                                name = {this.state.name}
+                            />
                             }
                       </Grid>
 

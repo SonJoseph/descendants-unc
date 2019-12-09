@@ -12,6 +12,8 @@ class CreateRelationship extends React.Component {
     constructor(props){
         super(props)
 
+        console.log('Is the selected node the root of the tree?: ' + this.props.selectedIsRoot)
+
         this.state = {
             reln : ''
         }
@@ -36,6 +38,7 @@ class CreateRelationship extends React.Component {
                     >
                         <MenuItem value={'spouse'}>Spouse</MenuItem>
                         <MenuItem value={'parent'}>Child</MenuItem>
+                        { this.props.selectedIsRoot && <MenuItem value={'child'}>Parent</MenuItem>}
                     </Select>
             </div>
 
