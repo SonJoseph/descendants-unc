@@ -5,8 +5,9 @@ import Container from '@material-ui/core/Container'
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { Divider } from '@material-ui/core';
-import Home from '@material-ui/icons/Home';
+// import Home from '@material-ui/icons/Home';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button'
 
 
 import * as d3 from "d3"
@@ -188,9 +189,8 @@ class UpdateTree extends React.Component {
                                         <Typography variant='h2'style={{textAlign: "center", marginTop: '10px'}}> {this.state.root_name}'s Family </Typography>
                                       </Grid>
                                       <Grid item>
-                                        <IconButton color="secondary" onClick={this.goHome}>
-                                          <Home style={{ fontSize: 40, borderWidth:0 }}/>
-                                        </IconButton>
+                                        <Button color="secondary" onClick={this.goHome} variant="outlined" color="secondary" size="large" label="Finish"> Home
+                                        </Button>
                                       </Grid>
                                   </Grid>
 
