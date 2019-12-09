@@ -32,10 +32,8 @@ class UpdateNode extends React.Component {
             pathname: '/',
         })
       } else {
-        this.props.back()
+        this.props.back(true)
       }
-      this.props.refreshTree()
-
     }
 
     render(){
