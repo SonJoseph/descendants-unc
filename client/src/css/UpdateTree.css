@@ -1,5 +1,13 @@
+.text {
+	font: 25px sans-serif;
+}
+
+/*.pane-1{
+	overflow-y: scroll;
+}*/
+
 body {
-	    font: 10px sans-serif;
+	    font: 12px sans-serif;
 	}
 	.linage {
 	    fill: none;
@@ -12,20 +20,23 @@ body {
 	.node {
 	    background-color: lightblue;
 			border-style: solid;
+			padding: 2px 2px 2px 2px;
 			border-width: 1px;
 			box-sizing: border-box;
 	}
 	.woman {
 			background-color: pink;
 			border-style: solid;
+			padding: 2px 2px 2px 2px;
 			border-width: 1px;
 			box-sizing: border-box;
 	}
+
 	.emphasis{
 			font-style: italic;
 	}
 	p {
-		padding:0;
+		padding:2;
 		margin:0;
 	}
 	svg {
