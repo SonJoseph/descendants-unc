@@ -54,6 +54,9 @@ class UpdateTree extends React.Component {
     getTree = async (sendMsg=true) => { // We currently can't change the root of the tree
         const response = await fetch('/api/gettree/id='+ this.state.root_id)
         const myJson = await response.json()
+
+        console.log(myJson)
+        
         this.setState({
             root_name : myJson[0]['name'], // In case the name of the root changes
             tree : myJson
@@ -61,6 +64,7 @@ class UpdateTree extends React.Component {
         this.drawTree()
 
         if(sendMsg == true){
+            // I made a change to this tree, all users looking at this tree (besides myself), force refresh!
             this.state.socket.emit('FetchTree', {
                 'session' : this.state.session,
                 'tree_id' : this.state.root_id
