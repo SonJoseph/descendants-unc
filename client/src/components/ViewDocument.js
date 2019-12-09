@@ -14,7 +14,7 @@ class ViewDocument extends React.Component {
         return(
             <ListItem>
                 <ListItemText>
-                    {this.props.k + ": "} <a href={this.props.val}> {this.props.val} </a>
+                    {this.props.k + ": "} <a href={'//'+this.props.val}> {this.props.val} </a>
                 </ListItemText>
             </ListItem>
         )
