@@ -2,6 +2,8 @@ import React from 'react'
 
 import ScreenRegistry from '../components/ScreenRegistry'
 import Container from '@material-ui/core/Container'
+import openSocket from 'socket.io-client'
+import Cookies from 'universal-cookie'
 
 import * as d3 from "d3"
 import _ from 'lodash'
@@ -14,7 +16,10 @@ class UpdateTree extends React.Component {
 
     constructor(props){
         super(props)
+        const cookies = new Cookies()
         this.state = {
+            session : cookies.get('SESSION_ID'),
+            socket: openSocket('http://localhost:5000'),
             display : 'home',
 
             root_name : props.location.state.family.name,
@@ -26,9 +31,20 @@ class UpdateTree extends React.Component {
             selectedArr : [],
             selectedJson : {},
         }
+
+        this.state.socket.on('RefreshTree', data =>{
+            if(data['tree_id'] === this.state.root_id && this.state.session != data['session']){
+                console.log('Another client is working on this tree')
+                this.getTree()
+            }
+        })
     }
 
     getTree = async () => { // We currently can't change the root of the tree
+        this.state.socket.emit('FetchTree', {
+            'session' : this.state.session,
+            'tree_id' : this.state.root_id
+        })
         const response = await fetch('/api/gettree/id='+ this.state.root_id)
         const myJson = await response.json()
         this.setState({

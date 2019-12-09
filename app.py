@@ -5,13 +5,21 @@ from neo4j import GraphDatabase, basic_auth
 from flask import jsonify
 import json
 from credentials import url, user, password
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__, static_folder='client/build')
+socketio = SocketIO(app, cors_allowed_origins="*")
 driver = {}
 
 def connect(): # this is called when the app is created
     global driver
     driver = GraphDatabase.driver(url, auth=basic_auth(user, password))
+
+@socketio.on('FetchTree')
+def fetchTree(json):
+    print(json['session'])
+    emit('RefreshTree', {'tree_id': json['tree_id'], 'session': json['session']}, broadcast=True, include_self=False)
+    # Tell all users besides the sender to re-fetch the tree with id
 
 # Serve React App
 @app.route('/', defaults={'path': ''})
@@ -172,7 +180,6 @@ visited = set() # set
 def getTree(id):
     global driver
     global visited
-
     members = []
     visited = set() # clear this for every new request
     with driver.session() as session:
@@ -224,7 +231,8 @@ def addMember(session, name, id, depth): # DFS ... 'tree' is the name of the roo
 
 if __name__ == '__main__':
     connect()
-    app.run(use_reloader=True, port=5000)
+    #app.run(use_reloader=True, port=5000)
+    socketio.run(app, debug=True, port=5000)
 
 '''
 CREATE (al:Person { name: "Alex", birth: "05301998", depth: 0, root: 1}),
