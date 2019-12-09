@@ -79,11 +79,11 @@ class CreateNode extends React.Component {
         }
         if(!this.props.isUpdate){
           let newRootWithReln = this.state.relnType === 'child';
-            if(this.state.isRoot || newRootWithReln){ 
-              /* 
+            if(this.state.isRoot || newRootWithReln){
+              /*
                 We are creating a new tree from scratch
                   OR
-                We are adding a new root whose child is the selectedID 
+                We are adding a new root whose child is the selectedID
               */
                 person['root'] = 1
             }
@@ -143,7 +143,7 @@ class CreateNode extends React.Component {
         return(
             <div>
 
-                <Grid container spacing={2} direction="column" justify="center" alignItems="center">
+                <Grid container spacing={2} direction="column" justify="center" alignItems="center" style={{maxHeight: '100%', overflow: 'auto'}}>
                   {this.props.isUpdate && <h2>Editing {this.state.name}</h2>}
                   {!this.props.isUpdate && !this.props.isRoot && <h2>Adding Relative to {this.props.selectedJson['name']}</h2>}
                   <Grid item xs={12}>

@@ -155,7 +155,7 @@ class UpdateTree extends React.Component {
 
                 <SplitPane split="vertical" defaultSize={400}>
 
-                            <div>
+                            <div style={{maxHeight: '100%', overflow: 'auto'}}>
                                 {<Form
                                     {...this.state} // parent's state can be accesed in child via this.props...
                                     isRoot={false}
@@ -167,7 +167,7 @@ class UpdateTree extends React.Component {
                                 />}
                             </div>
 
-                            <div>
+                            <div >
                                 <p class="text"> {this.state.root_name}'s Family </p>
                                 <svg ref="tree" id = "graph" width={1000} height={700}></svg>
                             </div>
