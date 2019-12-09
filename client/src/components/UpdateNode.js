@@ -18,7 +18,6 @@ class UpdateNode extends React.Component {
         let url = '/api/updatenode/person='+JSON.stringify(json);
         const response = await fetch(url)
         const myJson = await response.json()
-        this.props.refreshTree()
         this.props.back()
     }
 

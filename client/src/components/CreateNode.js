@@ -105,8 +105,8 @@ class CreateNode extends React.Component {
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
 
-                  this.props.refreshTree()
-                  this.props.back(false)
+                  this.props.back(false, myJson['id'])
+
                   return
                 }else{
                   // Make the new node the parent of the selected (in this case, that is the old root node)
@@ -114,7 +114,6 @@ class CreateNode extends React.Component {
                   const response = await fetch(url)
                   let createRelnJson = await response.json()
                   this.props.changeRoot(myJson['id'])
-                  this.props.back(false)
                 }
             }else{
               this.props.history.push({
