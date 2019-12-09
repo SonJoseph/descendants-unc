@@ -1,4 +1,5 @@
 certifi==2017.11.5
+cffi==1.13.2
 chardet==3.0.4
 Click==7.0
 coverage==4.5.4
@@ -7,6 +8,9 @@ eventlet==0.25.1
 flake8==3.5.0
 Flask==1.1.1
 Flask-SocketIO==4.2.1
+gevent==1.4.0
+gevent-socketio==0.3.6
+gevent-websocket==0.10.1
 greenlet==0.4.15
 gunicorn==19.9.0
 idna==2.6
@@ -24,6 +28,7 @@ pew==1.1.2
 pipenv==9.0.1
 psutil==5.4.5
 pycodestyle==2.3.1
+pycparser==2.19
 pyflakes==1.6.0
 python-engineio==3.11.0
 python-socketio==4.4.0
